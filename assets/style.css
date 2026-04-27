@@ -1,0 +1,165 @@
+/* ───────── FONDO GLOBAL ───────── */
+.stApp {
+    background: linear-gradient(135deg, #e6eef8, #f8fbff);
+    font-family: 'Inter', sans-serif;
+}
+
+/* ───────── CONTENEDOR GENERAL ───────── */
+.main {
+    background: transparent !important;
+}
+
+/* RESULT CARDS  */
+.result-card {
+    color: #0f172a !important;
+}
+
+/* EXPANDER (hallazgos técnicos) */
+details, summary {
+    color: #0f172a !important;
+}
+
+/* INPUT LABELS */
+label {
+    color: #1e3a8a !important;
+}
+
+/* ───────── NAV / BRAND CARD (ARRIBA IZQ) ───────── */
+.hero-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    padding-top: 20px;
+}
+
+.hero-wrapper::before {
+    content: "🔐  WebShield AI";
+    display: inline-block;
+    background: #849bb8;
+    color: #091947;
+    padding: 14px 22px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 18px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* ocultamos el título grande original */
+.hero-title {
+    display: none;
+}
+
+.hero-sub, .hero-divider, .hero-eyebrow {
+    display: none;
+}
+
+/* ───────── TITULO CENTRAL NUEVO ───────── */
+.section-title-main {
+    text-align: center;
+    font-size: 34px;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-top: 30px;
+}
+
+.section-sub-main {
+    text-align: center;
+    color: #314259;
+    margin-bottom: 30px;
+}
+
+/* ───────── CARD AVISO ETICO ───────── */
+.etica-box {
+    background: linear-gradient(90deg, #07163e, #203054,#394d77 );
+    color: white;
+    padding: 25px 22px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 25px rgba(37,99,235,0.25);
+    font-size: 14px;
+}
+
+/* ───────── CARD INPUT ───────── */
+.input-card {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+}
+
+/* ───────── LABEL ───────── */
+.input-label {
+    font-size: 14px;
+    color: #2563eb;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* ───────── INPUT ───────── */
+.stTextInput input {
+    background: #0f172a !important;
+    color: #e2e8f0 !important;
+    border-radius: 12px !important;
+    border: 2px solid #1e3a8a !important;
+    padding: 12px !important;
+    font-size: 14px;
+}
+
+.stTextInput input:focus {
+    border: 2px solid #3b82f6 !important;
+    box-shadow: 0 0 10px rgba(59,130,246,0.4);
+}
+
+/* ───────── BOTON ───────── */
+.stButton button {
+    background: linear-gradient(90deg, #9e0e0e, #ef4444,#f97316);
+    color: white;
+    border-radius: 12px;
+    font-weight: 600;
+    border: none;
+    height: 45px;
+    transition: all 0.25s ease;
+}
+
+.stButton button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(239,68,68,0.35);
+}
+
+/* ───────── FEATURES (OPCIONAL SI LOS AGREGAS) ───────── */
+.features-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+.feature-item {
+    text-align: center;
+    flex: 1;
+    color: #1e293b;
+}
+
+.feature-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+/* ───────── EMPTY STATE ───────── */
+.empty-state {
+    text-align: center;
+    padding: 80px;
+    color: #64748b;
+}
+
+.empty-state-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+/* ───────── FOOTER ───────── */
+.footer {
+    text-align: center;
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 50px;
+}
