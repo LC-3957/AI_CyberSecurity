@@ -86,7 +86,7 @@ elif "scan_json" not in st.session_state:
     </div>
     """, unsafe_allow_html=True)
 
-# ───────── CHATBOT — SECCIÓN DE EMI ─────────
+# ───────── CHATBOT — SECCIÓN DE EMI Funcional ─────────
 # Solo mostrar el chat si ya hay un análisis hecho
 if "scan_json" in st.session_state:
 
