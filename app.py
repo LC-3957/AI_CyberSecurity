@@ -18,7 +18,6 @@ css_path = os.path.join(os.path.dirname(__file__), "assets", "style.css")
 with open(css_path, encoding="utf-8") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-
 # ───────── HERO ─────────
 st.markdown("""
 <div class="hero-wrapper">
@@ -47,7 +46,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ───────── INPUT ─────────
-#st.markdown('<div class="input-card">', unsafe_allow_html=True)
 st.markdown('<div class="input-label"> Ingresa la URL autorizada a analizar</div>', unsafe_allow_html=True)
 
 col1, col2 = st.columns([5, 1])
@@ -68,21 +66,32 @@ if analizar:
 
     res = requests.post(BACKEND_URL, json={"url": url_input})
     scan_json = res.json()
-
     resultado_ia = analizar_completo(scan_json)
+
+    # Guardar datos en sesión para que el chatbot los use
+    st.session_state["scan_json"]     = scan_json
+    st.session_state["resultado_ia"]  = resultado_ia
+    st.session_state["url_analizada"] = url_input
+    st.session_state["chat_messages"] = []  # Resetear chat al hacer nuevo análisis
 
     st.markdown(f'<div class="result-card">{resultado_ia["resumen"]}</div>', unsafe_allow_html=True)
 
-    # ───────── CHATBOT — SECCIÓN DE EMI ─────────
-    # Guardar datos en sesión para que el chatbot los use
-    st.session_state["scan_json"]      = scan_json
-    st.session_state["resultado_ia"]   = resultado_ia
-    st.session_state["url_analizada"]  = url_input
+elif "scan_json" not in st.session_state:
+    st.markdown("""
+    <div class="empty-state">
+        <div class="empty-state-icon">🛡️</div>
+        <div class="empty-state-text">
+            INGRESA UNA URL PARA COMENZAR
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# ───────── CHATBOT — SECCIÓN DE EMI ─────────
+# Solo mostrar el chat si ya hay un análisis hecho
+if "scan_json" in st.session_state:
 
     st.markdown("---")
     st.markdown("### 💬 Asistente de consultas")
-
-# ── EMI: Chatbot integrado con resultados del análisis ──
 
     # Inicializar historial del chat
     if "chat_messages" not in st.session_state:
@@ -146,12 +155,3 @@ Análisis de IA (resumen, riesgos, impacto, mitigaciones, resumen ejecutivo):
                 error_msg = f"❌ Error al consultar el asistente: `{str(e)}`"
                 respuesta_placeholder.markdown(error_msg)
                 st.session_state.chat_messages.append({"role": "assistant", "content": error_msg})
-else:
-    st.markdown("""
-    <div class="empty-state">
-        <div class="empty-state-icon">🛡️</div>
-        <div class="empty-state-text">
-            INGRESA UNA URL PARA COMENZAR
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
