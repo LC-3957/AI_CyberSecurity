@@ -82,12 +82,70 @@ if analizar:
     st.markdown("---")
     st.markdown("### 💬 Asistente de consultas")
 
-    # ── EMI: Tu chatbot va aquí abajo ──
-    # Datos disponibles:
-    #   st.session_state["scan_json"]     → hallazgos técnicos del escaneo
-    #   st.session_state["resultado_ia"]  → resumen, riesgos, impacto, mitigaciones, resumen_ejecutivo
-    #   st.session_state["url_analizada"] → URL que se analizó
+# ── EMI: Chatbot integrado con resultados del análisis ──
 
+    # Inicializar historial del chat
+    if "chat_messages" not in st.session_state:
+        st.session_state.chat_messages = []
+
+    # Mostrar historial previo
+    for message in st.session_state.chat_messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    # Entrada del usuario
+    if user_question := st.chat_input("Pregunta algo sobre el análisis, ej: ¿cuál es el riesgo más urgente?"):
+
+        # Mostrar pregunta del usuario
+        st.session_state.chat_messages.append({"role": "user", "content": user_question})
+        with st.chat_message("user"):
+            st.markdown(user_question)
+
+        # Preparar contexto con los datos del análisis
+        scan_json     = st.session_state.get("scan_json", {})
+        resultado_ia  = st.session_state.get("resultado_ia", {})
+        url_analizada = st.session_state.get("url_analizada", "")
+
+        contexto = f"""
+Eres un asistente experto en ciberseguridad. El usuario ya realizó un análisis de seguridad web.
+Responde ÚNICAMENTE basándote en los datos del análisis proporcionado. No inventes información.
+Responde en español, de forma clara y sin tecnicismos innecesarios.
+
+URL analizada: {url_analizada}
+
+Hallazgos técnicos del escaneo:
+{scan_json}
+
+Análisis de IA (resumen, riesgos, impacto, mitigaciones, resumen ejecutivo):
+{resultado_ia}
+"""
+
+        # Llamar a Claude para responder
+        with st.chat_message("assistant"):
+            respuesta_placeholder = st.empty()
+            respuesta_placeholder.markdown("🤔 *Consultando el análisis...*")
+
+            try:
+                import anthropic
+                client = anthropic.Anthropic()
+
+                response = client.messages.create(
+                    model="claude-sonnet-4-6",
+                    max_tokens=1024,
+                    system=contexto,
+                    messages=[
+                        {"role": "user", "content": user_question}
+                    ]
+                )
+
+                respuesta = response.content[0].text
+                respuesta_placeholder.markdown(respuesta)
+                st.session_state.chat_messages.append({"role": "assistant", "content": respuesta})
+
+            except Exception as e:
+                error_msg = f"❌ Error al consultar el asistente: `{str(e)}`"
+                respuesta_placeholder.markdown(error_msg)
+                st.session_state.chat_messages.append({"role": "assistant", "content": error_msg})
 else:
     st.markdown("""
     <div class="empty-state">
