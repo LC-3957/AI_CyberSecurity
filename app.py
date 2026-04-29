@@ -73,6 +73,21 @@ if analizar:
 
     st.markdown(f'<div class="result-card">{resultado_ia["resumen"]}</div>', unsafe_allow_html=True)
 
+    # ───────── CHATBOT — SECCIÓN DE EMI ─────────
+    # Guardar datos en sesión para que el chatbot los use
+    st.session_state["scan_json"]      = scan_json
+    st.session_state["resultado_ia"]   = resultado_ia
+    st.session_state["url_analizada"]  = url_input
+
+    st.markdown("---")
+    st.markdown("### 💬 Asistente de consultas")
+
+    # ── EMI: Tu chatbot va aquí abajo ──
+    # Datos disponibles:
+    #   st.session_state["scan_json"]     → hallazgos técnicos del escaneo
+    #   st.session_state["resultado_ia"]  → resumen, riesgos, impacto, mitigaciones, resumen_ejecutivo
+    #   st.session_state["url_analizada"] → URL que se analizó
+
 else:
     st.markdown("""
     <div class="empty-state">
