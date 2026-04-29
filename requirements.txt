@@ -5,3 +5,4 @@ beautifulsoup4
 anthropic
 python-dotenv
 streamlit
+pydantic
