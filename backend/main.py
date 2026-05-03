@@ -54,7 +54,7 @@ def revisar_headers(url: str) -> dict:
 def validar_ssl(url: str) -> bool:
     """Valida si el sitio tiene un certificado SSL/TLS válido."""
     try:
-
+        # Extraemos solo el dominio (ej. www.google.com de https://www.google.com)
         hostname = urlparse(url).netloc
         if not hostname:
             return False
