@@ -3,8 +3,15 @@ import os
 import requests
 import streamlit as st
 
+
 sys.path.append(os.path.join(os.path.dirname(__file__), "backend"))
-from ai_analista import analizar_completo
+from backend.ai_analista import analizar_completo
+from login import mostrar_login, cerrar_sesion
+
+
+# ── AUTENTICACIÓN ──
+if not mostrar_login():
+    st.stop()
 
 st.set_page_config(
     page_title="Web AI",
@@ -17,6 +24,17 @@ st.set_page_config(
 css_path = os.path.join(os.path.dirname(__file__), "assets", "style.css")
 with open(css_path, encoding="utf-8") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+
+# ── BOTÓN PARA CERRAR SESIÓN ──
+nombre = st.session_state.get("nombre_actual", "")
+col_a, col_b = st.columns([8, 1])
+with col_a:
+    st.markdown(f'<div style="font-size:0.75rem; color:#475569; font-family:monospace;">👤 {nombre}</div>', unsafe_allow_html=True)
+with col_b:
+    if st.button("Salir", type="secondary"):
+        cerrar_sesion()
+
 
 # ───────── HERO ─────────
 st.markdown("""

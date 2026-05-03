@@ -23,4 +23,6 @@ Thumbs.db
 # Streamlit
 .streamlit/
 
+generar_hashes.py
 
+.streamlit/secrets.toml
