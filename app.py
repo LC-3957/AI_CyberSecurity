@@ -164,127 +164,154 @@ if "resultado_ia" in st.session_state:
 
     # ── CHATBOT FLOTANTE ──
     if "chat_messages" not in st.session_state:
-        st.session_state.chat_messages = []
+        st.session_state.chat_messages = [
+            {"role": "assistant", "content": "Hola, soy tu asistente de seguridad. Puedo responder preguntas sobre el análisis realizado. ¿En qué te ayudo?"}
+        ]
 
-    # Procesar pregunta enviada desde el widget
-    if "widget_question" in st.session_state and st.session_state.widget_question:
-        user_question = st.session_state.widget_question
-        st.session_state.widget_question = ""
+    # Construir mensajes HTML
+    mensajes_html = ""
+    for m in st.session_state.chat_messages:
+        cls   = "chat-msg-bot" if m["role"] == "assistant" else "chat-msg-user"
+        texto = m["content"].replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>")
+        mensajes_html += f'<div class="{cls}">{texto}</div>\n'
+
+    st.markdown(f"""
+    <div id="chat-fab" onclick="document.getElementById('chat-win').style.display='flex'; this.style.display='none'">💬</div>
+
+    <div id="chat-win">
+        <div id="chat-header">
+            <div style="display:flex;align-items:center;gap:0.6rem">
+                <div id="chat-avatar">🛡️</div>
+                <div>
+                    <div style="font-weight:700;font-size:0.88rem">Asistente WebShield</div>
+                    <div style="font-size:0.68rem;color:#93c5fd">Consulta sobre el análisis</div>
+                </div>
+            </div>
+            <button onclick="document.getElementById('chat-win').style.display='none'; document.getElementById('chat-fab').style.display='flex'">✕</button>
+        </div>
+        <div id="chat-msgs">
+            {mensajes_html}
+        </div>
+        <div id="chat-hint">Escribe tu pregunta abajo y presiona Enter</div>
+    </div>
+
+    <style>
+    #chat-fab {{
+        position:fixed; bottom:2rem; right:2rem;
+        width:54px; height:54px;
+        background:linear-gradient(135deg,#1e3a8a,#3b82f6);
+        border-radius:50%; display:flex; align-items:center; justify-content:center;
+        font-size:1.4rem; cursor:pointer; z-index:9999;
+        box-shadow:0 6px 20px rgba(30,58,138,0.5);
+        transition:transform 0.2s;
+    }}
+    #chat-fab:hover {{ transform:scale(1.1); }}
+
+    #chat-win {{
+        position:fixed; bottom:5.5rem; right:2rem;
+        width:340px; height:440px;
+        background:white; border-radius:18px;
+        box-shadow:0 20px 60px rgba(0,0,0,0.2);
+        z-index:9998; display:none; flex-direction:column;
+        border:1px solid #e2e8f0; overflow:hidden;
+    }}
+    #chat-header {{
+        background:linear-gradient(135deg,#0f2456,#1e3a8a);
+        padding:0.9rem 1.1rem; display:flex;
+        align-items:center; justify-content:space-between; color:white;
+        flex-shrink:0;
+    }}
+    #chat-header button {{
+        background:none; border:none; color:white;
+        font-size:1rem; cursor:pointer; opacity:0.7;
+    }}
+    #chat-header button:hover {{ opacity:1; }}
+    #chat-avatar {{
+        width:32px; height:32px;
+        background:linear-gradient(135deg,#c9962c,#e8b84b);
+        border-radius:50%; display:flex; align-items:center;
+        justify-content:center; font-size:0.9rem;
+    }}
+    #chat-msgs {{
+        flex:1; overflow-y:auto; padding:0.9rem;
+        display:flex; flex-direction:column; gap:0.6rem;
+        background:#f8fafc;
+    }}
+    .chat-msg-bot {{
+        background:white; border:1px solid #e2e8f0;
+        border-radius:12px 12px 12px 3px;
+        padding:0.6rem 0.85rem; font-size:0.8rem;
+        color:#0f172a; max-width:88%; align-self:flex-start;
+        box-shadow:0 2px 6px rgba(0,0,0,0.05); line-height:1.5;
+    }}
+    .chat-msg-user {{
+        background:linear-gradient(135deg,#1e3a8a,#3b82f6);
+        border-radius:12px 12px 3px 12px;
+        padding:0.6rem 0.85rem; font-size:0.8rem;
+        color:white; max-width:88%; align-self:flex-end; line-height:1.5;
+    }}
+    #chat-hint {{
+        text-align:center; font-size:0.68rem; color:#94a3b8;
+        padding:0.4rem; background:white; border-top:1px solid #f1f5f9;
+        flex-shrink:0;
+    }}
+    /* Ocultar expander viejo */
+    [data-testid="stExpander"] {{ display:none!important; }}
+    /* Input del chat — visible pero compacto */
+    .chat-input-area [data-testid="stChatInput"] {{
+        background: white !important;
+    }}
+    .chat-input-area [data-testid="stChatInput"] textarea {{
+        background: white !important;
+        color: #0f172a !important;
+        border: 2px solid #1e3a8a !important;
+        border-radius: 12px !important;
+        font-size: 0.85rem !important;
+    }}
+    </style>
+
+    <script>
+    // Auto-scroll al fondo
+    function scrollChat() {{
+        const el = document.getElementById('chat-msgs');
+        if (el) el.scrollTop = el.scrollHeight;
+    }}
+    setTimeout(scrollChat, 300);
+    </script>
+    """, unsafe_allow_html=True)
+
+    # Input real de Streamlit — visible para que funcione
+    st.markdown('<div class="chat-input-area">', unsafe_allow_html=True)
+    if user_question := st.chat_input("Pregunta sobre el análisis..."):
+        st.session_state.chat_messages.append({"role": "user", "content": user_question})
 
         scan_ctx   = st.session_state.get("scan_json", {})
         result_ctx = st.session_state.get("resultado_ia", {})
         url_ctx    = st.session_state.get("url_analizada", "")
 
-        contexto = f"""Eres un asistente experto en ciberseguridad. El usuario ya realizó un análisis de seguridad web.
-Responde ÚNICAMENTE basándote en los datos del análisis proporcionado. No inventes información.
-Responde en español, de forma clara y concisa, sin tecnicismos innecesarios.
+        contexto = f"""Eres un asistente experto en ciberseguridad. Responde ÚNICAMENTE basándote en el análisis proporcionado.
+Responde en español, de forma clara y concisa. No uses emojis.
 URL analizada: {url_ctx}
-Hallazgos técnicos: {scan_ctx}
-Análisis de IA: {result_ctx}"""
+Hallazgos: {scan_ctx}
+Análisis IA: {result_ctx}"""
 
         try:
             import anthropic
-            try:
-                api_key = st.secrets["ANTHROPIC_API_KEY"]
-            except Exception:
-                api_key = os.environ.get("ANTHROPIC_API_KEY")
+            try:    api_key = st.secrets["ANTHROPIC_API_KEY"]
+            except: api_key = os.environ.get("ANTHROPIC_API_KEY")
             client   = anthropic.Anthropic(api_key=api_key)
             response = client.messages.create(
-                model="claude-sonnet-4-6",
-                max_tokens=512,
+                model="claude-sonnet-4-6", max_tokens=512,
                 system=contexto,
                 messages=[{"role": "user", "content": user_question}]
             )
             respuesta = response.content[0].text
         except Exception as e:
-            respuesta = f"Error al consultar: {str(e)}"
+            respuesta = f"Error: {str(e)}"
 
-        st.session_state.chat_messages.append({"role": "user",      "content": user_question})
         st.session_state.chat_messages.append({"role": "assistant", "content": respuesta})
         st.rerun()
-
-    # Construir historial HTML para el widget
-    mensajes_html = ""
-    for m in st.session_state.chat_messages:
-        cls     = "chat-msg-bot" if m["role"] == "assistant" else "chat-msg-user"
-        texto   = m["content"].replace("\n", "<br>").replace('"', '&quot;')
-        mensajes_html += f'<div class="{cls}">{texto}</div>'
-
-    if not mensajes_html:
-        mensajes_html = '<div class="chat-msg-bot">Hola! Puedo responder preguntas sobre el análisis. ¿En qué te ayudo?</div>'
-
-    st.markdown(f"""
-    <!-- Botón flotante -->
-    <button id="chat-widget-btn" onclick="toggleChat()">💬</button>
-
-    <!-- Ventana del chat -->
-    <div id="chat-widget-window">
-        <div id="chat-widget-header">
-            <div id="chat-widget-header-icon">🛡️</div>
-            <div>
-                <div id="chat-widget-header-title">Asistente WebShield</div>
-                <div id="chat-widget-header-sub">Consulta sobre el análisis</div>
-            </div>
-            <button id="chat-widget-close" onclick="toggleChat()">✕</button>
-        </div>
-        <div id="chat-widget-messages" id="chatMessages">
-            {mensajes_html}
-        </div>
-        <div id="chat-widget-input-row">
-            <input id="chat-widget-input" type="text" placeholder="Escribe tu pregunta..."
-                   onkeydown="if(event.key==='Enter') sendMsg()"/>
-            <button id="chat-widget-send" onclick="sendMsg()">➤</button>
-        </div>
-    </div>
-
-    <script>
-    function toggleChat() {{
-        const win = document.getElementById('chat-widget-window');
-        win.classList.toggle('open');
-        if (win.classList.contains('open')) {{
-            scrollBottom();
-            document.getElementById('chat-widget-input').focus();
-        }}
-    }}
-
-    function scrollBottom() {{
-        const msgs = document.getElementById('chat-widget-messages');
-        if (msgs) msgs.scrollTop = msgs.scrollHeight;
-    }}
-
-    function sendMsg() {{
-        const input = document.getElementById('chat-widget-input');
-        const text  = input.value.trim();
-        if (!text) return;
-        input.value = '';
-
-        // Inyectar en un input oculto de Streamlit y disparar
-        const stInputs = window.parent.document.querySelectorAll('input[type="text"]');
-        for (let inp of stInputs) {{
-            if (inp.placeholder && inp.placeholder.includes('Pregunta')) {{
-                const nativeInput = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value');
-                nativeInput.set.call(inp, text);
-                inp.dispatchEvent(new Event('input', {{ bubbles: true }}));
-                setTimeout(() => {{
-                    inp.dispatchEvent(new KeyboardEvent('keydown', {{ key: 'Enter', keyCode: 13, bubbles: true }}));
-                }}, 100);
-                break;
-            }}
-        }}
-    }}
-
-    // Auto-scroll al abrir
-    window.addEventListener('load', scrollBottom);
-    setTimeout(scrollBottom, 500);
-    </script>
-    """, unsafe_allow_html=True)
-
-    # Input oculto que recibe la pregunta del widget
-    pregunta_widget = st.text_input("Pregunta al asistente", key="chat_input_hidden",
-                                     label_visibility="hidden", placeholder="Pregunta sobre el análisis")
-    if pregunta_widget:
-        st.session_state.widget_question = pregunta_widget
-        st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
 
 elif "scan_json" not in st.session_state:
     st.markdown("""
