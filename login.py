@@ -255,18 +255,17 @@ def mostrar_login():
     # Columna izq vacía | Columna der con card del formulario
     _, col, margin = st.columns([1, 1.2, 0.15])
     with col:
-        st.markdown('<div class="login-card">', unsafe_allow_html=True)
-
-        st.markdown('<div class="logo-shield">🛡️</div>', unsafe_allow_html=True)
-        st.markdown('<div class="login-title">WebShield AI</div>', unsafe_allow_html=True)
-        st.markdown('<div class="login-sub">Asistente de Seguridad Web con IA</div>', unsafe_allow_html=True)
-
         st.markdown("""
-        <div class="access-card">
-            <div class="access-icon">🔐</div>
-            <div>
-                <div class="access-title">Acceso restringido — Solo equipo autorizado</div>
-                <div class="access-sub">Universidad Iberoamericana León &nbsp;·&nbsp; 2026</div>
+        <div class="login-card">
+            <div class="logo-shield">🛡️</div>
+            <div class="login-title">WebShield AI</div>
+            <div class="login-sub">Asistente de Seguridad Web con IA</div>
+            <div class="access-card">
+                <div class="access-icon">🔐</div>
+                <div>
+                    <div class="access-title">Acceso restringido — Solo equipo autorizado</div>
+                    <div class="access-sub">Universidad Iberoamericana León &nbsp;·&nbsp; 2026</div>
+                </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -318,8 +317,6 @@ def mostrar_login():
             </div>
         </div>
         """, unsafe_allow_html=True)
-
-        st.markdown('</div>', unsafe_allow_html=True)
 
     return False
 
