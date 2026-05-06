@@ -15,6 +15,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# CSS del login
+def cargar_css():
+    try:
+        with open("assets/login.css") as f:
+            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    except FileNotFoundError:
+        st.warning("No se encontró el archivo CSS en assets/login.css")
+
 # ────────────────────────────────────────────
 #  USUARIOS — hashes generados con generar_hashes.py
 # ────────────────────────────────────────────
@@ -116,6 +124,7 @@ def verificar_credenciales(usuario: str, password: str) -> bool:
 #  PANTALLA DE LOGIN
 # ────────────────────────────────────────────
 
+
 def mostrar_login() -> bool:
 
     cargar_css()  
@@ -130,12 +139,7 @@ def mostrar_login() -> bool:
         else:
             del st.session_state["session_token"]
 
-    # CSS del login
-
-    def cargar_css():
-        with open("assets/login.css") as f:
-            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-
+    
     # Layout centrado
     _, col, _ = st.columns([1, 1.4, 1])
 
