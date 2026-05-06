@@ -1,20 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+/* ── RESET Y BASE ── */
 * { font-family: 'Inter', sans-serif !important; box-sizing: border-box; }
 
-.stApp { background: #FFFAED !important; }
+.stApp {
+    background: #FFFAED !important;
+    /*background: linear-gradient(
+  rgba(0, 30, 62, 0.52),
+  rgba(94, 172, 255, 0.213)
+); */
+}
 
+/* Ocultar barra superior de streamlit */
 [data-testid="stHeader"] { background: transparent !important; }
 [data-testid="stDecoration"] { display: none !important; }
 #MainMenu { visibility: hidden !important; }
 footer { visibility: hidden !important; }
 
+/* ── TOPBAR — barra azul oscura arriba ── */
 [data-testid="stHeader"] {
     background: #0f1f3d !important;
     visibility: visible !important;
     height: 56px !important;
 }
 
+/* Forzar topbar custom */
 .topbar {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -27,19 +37,39 @@ footer { visibility: hidden !important; }
     box-shadow: 0 2px 12px rgba(0,0,0,0.3);
 }
 .topbar-brand {
-    display: flex; align-items: center; gap: 0.6rem;
-    font-size: 1.1rem; font-weight: 700; color: white;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
 }
-.topbar-brand-icon { font-size: 1.3rem; }
-.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 1.2rem; }
+.topbar-brand-icon {
+    font-size: 1.3rem;
+}
+.topbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
 .topbar-avatar {
     width: 36px; height: 36px;
     background: linear-gradient(135deg, #c9962c, #e8b84b);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 0.85rem; color: #0f172a; cursor: pointer;
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: #0f172a;
+    cursor: pointer;
+}
+.topbar-salir {
+    color: #94a3b8;
+    font-size: 0.8rem;
+    cursor: pointer;
 }
 
+/* Empujar contenido debajo del topbar */
 .block-container {
     padding-top: 4.5rem !important;
     padding-left: 2rem !important;
@@ -48,63 +78,62 @@ footer { visibility: hidden !important; }
     margin: 0 auto !important;
 }
 
-.main-content-wrapper { max-width: 860px; margin: 0 auto; }
+/* Centrar solo el contenido principal (hero + input + resultados) */
+.main-content-wrapper {
+    max-width: 860px;
+    margin: 0 auto;
+}
 
 /* ── AVISO ETICO ── */
 .etica-box {
-    background: rgb(2, 23, 45);
+    background: rgb(2, 23, 45); 
     color: white;
     padding: 14px 20px;
     border-radius: 14px;
     margin-bottom: 20px;
     font-size: 0.85rem;
-    display: flex; align-items: center; gap: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
     box-shadow: 0 4px 15px rgba(7,22,62,0.3);
 }
-.etica-box span { font-weight: 700; color: #e8b84b; letter-spacing: 0.05em; }
+.etica-box span {
+    font-weight: 700;
+    color: #e8b84b;
+    letter-spacing: 0.05em;
+}
 
-/* ── BIENVENIDA ── */
+/* ── BIENVENIDA + SALIR ── */
 .usuario-bar {
-    font-size: 1.1rem !important;
+    font-size: 1.25rem !important;
     font-weight: 700 !important;
     color: #0f2456 !important;
     padding: 4px 0 !important;
 }
 
-/* ── BOTÓN SALIR — dorado ── */
-button[kind="secondary"] {
+/* Botón salir */
+[data-testid="stButton"] button[kind="secondary"] {
     background: linear-gradient(135deg, #c9962c, #e8b84b) !important;
     color: #091020 !important;
     border: none !important;
     border-radius: 10px !important;
     font-weight: 700 !important;
-    font-size: 0.82rem !important;
+    font-size: 0.85rem !important;
     padding: 0.5rem 1.2rem !important;
     box-shadow: 0 4px 12px rgba(201,150,44,0.3) !important;
     transition: all 0.2s !important;
 }
-button[kind="secondary"]:hover {
+[data-testid="stButton"] button[kind="secondary"]:hover {
     transform: translateY(-1px) !important;
     box-shadow: 0 6px 18px rgba(201,150,44,0.45) !important;
 }
 
-/* ── BOTÓN NUEVA CONSULTA — sobrescribe solo ese ── */
-.nueva-consulta-btn button {
-    background: white !important;
-    color: #1e3a8a !important;
-    border: 2px solid #1e3a8a !important;
-    box-shadow: none !important;
-}
-.nueva-consulta-btn button:hover {
-    background: #1e3a8a !important;
-    color: white !important;
-}
-
-/* ── HERO ── */
+/* ── HERO — escudo + títulos centrales ── */
 .hero-wrapper { display: none; }
+
 .section-title-main {
     text-align: center;
-    font-size: 1.6rem;
+    font-size: 2rem;
     font-weight: 800;
     color: #0a1b45;
     margin-top: 1rem;
@@ -114,23 +143,30 @@ button[kind="secondary"]:hover {
 .section-sub-main {
     text-align: center;
     color: #333f50;
-    font-size: 0.85rem;
+    font-size: 0.92rem;
     margin-bottom: 1.8rem;
     line-height: 1.6;
 }
 
-/* ── INPUT ── */
+/* ── INPUT CARD — caja azul oscura con URL ── */
 .input-label {
-    font-size: 0.85rem; font-weight: 700; color: #c9962c;
-    margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #c9962c;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
+
+/* Wrapper de la card azul que envuelve input + botón */
 .stTextInput input {
     background: #0f1f3d !important;
     color: #e2e8f0 !important;
     border-radius: 12px !important;
     border: 1.5px solid #1e3a8a !important;
     padding: 14px 16px !important;
-    font-size: 0.9rem !important;
+    font-size: 0.95rem !important;
     transition: all 0.2s !important;
 }
 .stTextInput input::placeholder { color: #64748b !important; }
@@ -140,7 +176,7 @@ button[kind="secondary"]:hover {
 }
 .stTextInput label { display: none !important; }
 
-/* ── BOTÓN ANALIZAR ── */
+/* Botón ANALIZAR */
 [data-testid="stButton"] button[kind="primary"] {
     background: linear-gradient(90deg, #b8860b, #d4a017, #e8b84b) !important;
     color: #0c1323 !important;
@@ -169,43 +205,16 @@ button[kind="secondary"]:hover {
     border: 1px solid #edf5ff;
     color: #0f172a !important;
     line-height: 1.7;
-    font-size: 0.9rem;
 }
-/* Tamaños de títulos más moderados dentro de cards */
-.result-card h1 { font-size: 1.2rem !important; color: #0f2456 !important; font-weight: 800 !important; }
-.result-card h2 { font-size: 1.05rem !important; color: #0f2456 !important; font-weight: 700 !important; }
-.result-card h3 { font-size: 0.95rem !important; color: #0f2456 !important; font-weight: 700 !important; }
-.result-card h4 { font-size: 0.88rem !important; color: #1e3a8a !important; font-weight: 600 !important; }
-.result-card p, .result-card li { color: #0f172a !important; font-size: 0.88rem !important; }
-.result-card strong { color: #0f172a !important; }
-
-/* Ocultar líneas # sueltas que aparecen como texto plano */
-[data-testid="stMarkdownContainer"] > div > p:first-child {
-    display: none;
+.result-card h3, .result-card h4 {
+    color: #0f2456 !important;
+    font-weight: 700;
+}
+.result-card p, .result-card li, .result-card span {
+    color: #0f172a !important;
 }
 
-/* ── BLOQUES DE CÓDIGO ── */
-.result-card pre,
-.result-card code,
-[data-testid="stMarkdownContainer"] pre,
-[data-testid="stMarkdownContainer"] code {
-    background: #111a24 !important;
-    color: #e2e8f0 !important;
-    border-radius: 10px !important;
-    padding: 1rem 1.2rem !important;
-    font-size: 0.8rem !important;
-    line-height: 1.6 !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    overflow-x: auto !important;
-}
-[data-testid="stMarkdownContainer"] pre code {
-    background: transparent !important;
-    padding: 0 !important;
-    border: none !important;
-    color: #e2e8f0 !important;
-}
-
-/* ── EXPANDER ── */
+/* ── EXPANDER hallazgos ── */
 details {
     background: whitesmoke !important;
     border-radius: 14px !important;
@@ -218,9 +227,10 @@ summary {
     font-weight: 600 !important;
     padding: 1rem 1.4rem !important;
     cursor: pointer !important;
-    font-size: 0.88rem !important;
 }
-details[open] summary { border-bottom: 1px solid #e2e8f0; }
+details[open] summary {
+    border-bottom: 1px solid #e2e8f0;
+}
 
 /* ── CHATBOT ── */
 [data-testid="stChatMessageContent"] {
@@ -228,22 +238,38 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
     border-radius: 12px !important;
     padding: 12px 16px !important;
     color: #0f172a !important;
-    font-size: 0.88rem !important;
 }
 [data-testid="stChatMessageContent"] p,
 [data-testid="stChatMessageContent"] li,
 [data-testid="stChatMessageContent"] span,
 [data-testid="stChatMessageContent"] strong,
 [data-testid="stChatMessageContent"] em,
-[data-testid="stChatMessageContent"] code { color: #0f172a !important; }
+[data-testid="stChatMessageContent"] code {
+    color: #0f172a !important;
+}
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"])
-[data-testid="stChatMessageContent"] { background: #e8f0fe !important; }
+[data-testid="stChatMessageContent"] {
+    background: #e8f0fe !important;
+}
 [data-testid="stChatInput"] textarea {
     background: white !important;
     color: #0f172a !important;
     border: 2px solid #1e3a8a !important;
     border-radius: 12px !important;
-    font-size: 0.88rem !important;
+}
+
+/* ── EMPTY STATE ── */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #94a3b8;
+}
+.empty-state-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.empty-state-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #94a3b8;
 }
 
 /* ── PROGRESS BAR ── */
@@ -251,19 +277,22 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
     background: linear-gradient(90deg, #1e3a8a, #3b82f6) !important;
     border-radius: 10px !important;
 }
-[data-testid="stProgress"] { background: #e2e8f0 !important; border-radius: 10px !important; }
-
-/* ── EMPTY STATE ── */
-.empty-state { text-align: center; padding: 3rem 1rem; color: #94a3b8; }
-.empty-state-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
-.empty-state-text { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; color: #94a3b8; }
+[data-testid="stProgress"] {
+    background: #e2e8f0 !important;
+    border-radius: 10px !important;
+}
 
 /* ── FOOTER ── */
 .footer {
-    text-align: center; font-size: 0.7rem; color: #94a3b8;
-    margin-top: 3rem; padding-bottom: 2rem; letter-spacing: 0.08em;
+    text-align: center;
+    font-size: 0.7rem;
+    color: #94a3b8;
+    margin-top: 3rem;
+    padding-bottom: 2rem;
+    letter-spacing: 0.08em;
 }
 
+/* ── EXPANDER del chatbot ── */
 [data-testid="stExpander"] {
     background: white !important;
     border-radius: 16px !important;
@@ -271,5 +300,50 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
     box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important;
 }
 [data-testid="stExpander"] summary {
-    color: #0f2456 !important; font-weight: 700 !important; font-size: 0.9rem !important;
+    color: #0f2456 !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+}
+
+/* ── BLOQUES DE CÓDIGO — texto visible ── */
+.result-card pre,
+.result-card code,
+[data-testid="stMarkdownContainer"] pre,
+[data-testid="stMarkdownContainer"] code {
+    background: #111a24 !important;
+    color: #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 1rem 1.2rem !important;
+    font-size: 0.82rem !important;
+    line-height: 1.6 !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    overflow-x: auto !important;
+}
+[data-testid="stMarkdownContainer"] pre code {
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    color: #e2e8f0 !important;
+}
+
+/* Syntax highlight básico */
+.result-card pre span { color: #93c5fd !important; }
+
+/* Ocultar expander viejo del chatbot */
+/* [data-testid="stExpander"] { display:none } */
+
+/* Botón Nueva consulta — estilo diferente al dorado */
+[data-testid="stButton"] button[kind="secondary"] {
+    background: white !important;
+    color: #1e3a8a !important;
+    border: 2px solid #1e3a8a !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    font-size: 0.82rem !important;
+    transition: all 0.2s !important;
+}
+[data-testid="stButton"] button[kind="secondary"]:hover {
+    background: #1e3a8a !important;
+    color: white !important;
+    transform: translateY(-1px) !important;
 }
