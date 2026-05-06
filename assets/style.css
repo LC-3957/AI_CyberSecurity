@@ -439,7 +439,7 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
 /* ── Bloques de código — texto visible ── */
 [data-testid="stMarkdownContainer"] pre code,
 [data-testid="stMarkdownContainer"] pre {
-    background: #1e2d3d !important;
+    background: #a9bacd !important;
     color: #e2e8f0 !important;
     border-radius: 10px !important;
     padding: 1rem 1.2rem !important;
