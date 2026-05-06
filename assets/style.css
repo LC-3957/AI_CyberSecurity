@@ -317,14 +317,17 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
     -webkit-text-fill-color: unset !important;
 }
 
-/* Asegurar que todo el texto del app sea visible */
-.stApp, .stApp * {
+/* Asegurar que todo el texto del app sea visible por defecto */
+.stApp {
     color: #0f172a;
 }
 
-/* Contenedor principal de markdown */
-[data-testid="stVerticalBlock"] [data-testid="stMarkdownContainer"] {
-    background: transparent !important;
+/* Excepciones — contenedores oscuros mantienen texto blanco */
+.etica-box, .etica-box *,
+.topbar, .topbar *,
+[style*="background: linear-gradient(135deg, #0f2456"],
+[style*="background: linear-gradient(135deg, #0d1e40"] {
+    color: white !important;
 }
 
 /* ── Botón descargar reporte ── */
@@ -342,4 +345,22 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
     filter: brightness(1.15) !important;
     transform: translateY(-1px) !important;
     box-shadow: 0 6px 18px rgba(15,36,86,0.45) !important;
+}
+[data-testid="stDownloadButton"] button p,
+[data-testid="stDownloadButton"] button span,
+[data-testid="stDownloadButton"] button div {
+    color: white !important;
+}
+
+/* ── Aviso ético — texto visible ── */
+.etica-box, .etica-box div, .etica-box strong {
+    color: white !important;
+}
+.etica-box span {
+    color: #e8b84b !important;
+}
+
+/* ── Input label visible ── */
+.input-label {
+    color: #c9962c !important;
 }

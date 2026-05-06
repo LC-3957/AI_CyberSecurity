@@ -13,11 +13,27 @@ from backend.main import (
 from login import mostrar_login, cerrar_sesion
 
 def _limpiar_md(texto):
-    texto = re.sub(r'```[\s\S]*?```', '[bloque de codigo]', texto)
+    # Quitar bloques de código
+    texto = re.sub(r'```[\s\S]*?```', '', texto)
+    # Quitar encabezados #
     texto = re.sub(r'#{1,6}\s*', '', texto)
-    texto = re.sub(r'\*{1,3}([^*]+)\*{1,3}', r'\1', texto)
-    texto = re.sub(r'`([^`]+)`', r'\1', texto)
-    lineas = [l[:197]+'...' if len(l)>200 else l for l in texto.split('\n')]
+    # Quitar negritas e itálicas
+    texto = re.sub(r'\*{1,3}([^*\n]+)\*{1,3}', r'\1', texto)
+    # Quitar código inline
+    texto = re.sub(r'`([^`\n]+)`', r'\1', texto)
+    # Quitar líneas horizontales ---
+    texto = re.sub(r'^-{3,}\s*$', '', texto, flags=re.MULTILINE)
+    # Quitar caracteres no-latin problemáticos para fpdf
+    texto = texto.encode('latin-1', errors='replace').decode('latin-1')
+    # Truncar líneas largas
+    lineas = []
+    for l in texto.split('\n'):
+        if len(l) > 180:
+            # Partir en trozos de 180
+            while len(l) > 180:
+                lineas.append(l[:180])
+                l = l[180:]
+        lineas.append(l)
     return '\n'.join(lineas)
 
 def generar_pdf(r: dict, url: str) -> bytes:
@@ -32,7 +48,9 @@ def generar_pdf(r: dict, url: str) -> bytes:
     pdf.cell(0, 10, "WebShield AI - Reporte de Seguridad", ln=True)
     pdf.set_font("Helvetica", "", 9)
     pdf.set_text_color(100, 100, 100)
-    pdf.cell(0, 5, f"URL: {url[:80]+('...' if len(url)>80 else '')}", ln=True)
+    url_corta = (url[:80] + '...') if len(url) > 80 else url
+    url_corta = url_corta.encode('latin-1', errors='replace').decode('latin-1')
+    pdf.cell(0, 5, f"URL: {url_corta}", ln=True)
     pdf.cell(0, 5, "Universidad Iberoamericana Leon 2026 | Prof. Pablo Nachez", ln=True)
     pdf.ln(6)
 
@@ -49,17 +67,19 @@ def generar_pdf(r: dict, url: str) -> bytes:
         pdf.set_font("Helvetica", "B", 10)
         pdf.cell(0, 7, titulo, ln=True, fill=True)
         pdf.ln(2)
+
         texto = _limpiar_md(r.get(key, ""))
         pdf.set_text_color(30, 30, 30)
         pdf.set_font("Helvetica", "", 9)
+
         for linea in texto.split('\n'):
             linea = linea.strip()
             if not linea:
                 pdf.ln(2)
             else:
-                try:    pdf.multi_cell(0, 5, linea)
-                except: pdf.cell(0, 5, "[linea omitida]", ln=True)
+                pdf.multi_cell(0, 5, linea)
         pdf.ln(5)
+
     return bytes(pdf.output())
 
 st.set_page_config(
