@@ -406,7 +406,7 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
 [data-testid="stProgress"] div,
 [data-testid="stStatusWidget"] p,
 [data-testid="stStatusWidget"] span {
-    color: #fdfeff !important;
+    color: #1e3a8a !important;
     font-weight: 600 !important;
     font-size: 0.85rem !important;
 }
@@ -416,4 +416,36 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
 [data-testid="stAlert"] span,
 [data-testid="stAlertContainer"] p {
     color: #1e3a8a !important;
+}
+
+/* ── Alinear botones Nueva consulta y Descargar PDF ── */
+.nueva-consulta-btn button,
+[data-testid="stDownloadButton"] button {
+    height: 46px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+/* Eliminar margin extra que desalinea */
+.nueva-consulta-btn,
+[data-testid="stDownloadButton"] {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* ── Bloques de código — texto visible ── */
+[data-testid="stMarkdownContainer"] pre code,
+[data-testid="stMarkdownContainer"] pre {
+    background: #1e2d3d !important;
+    color: #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 1rem 1.2rem !important;
+    font-size: 0.82rem !important;
+    line-height: 1.6 !important;
+    display: block !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
 }
