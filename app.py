@@ -162,56 +162,129 @@ if "resultado_ia" in st.session_state:
     st.markdown(f'<div class="result-card">{r["mitigaciones"]}</div>',      unsafe_allow_html=True)
     st.markdown(f'<div class="result-card">{r["resumen_ejecutivo"]}</div>', unsafe_allow_html=True)
 
-    # ── CHATBOT ──
-    with st.expander("💬  Consulta al Asistente de Seguridad", expanded=True):
-        if "chat_messages" not in st.session_state:
-            st.session_state.chat_messages = []
+    # ── CHATBOT FLOTANTE ──
+    if "chat_messages" not in st.session_state:
+        st.session_state.chat_messages = []
 
-        for message in st.session_state.chat_messages:
-            with st.chat_message(message["role"]):
-                st.markdown(message["content"])
+    # Procesar pregunta enviada desde el widget
+    if "widget_question" in st.session_state and st.session_state.widget_question:
+        user_question = st.session_state.widget_question
+        st.session_state.widget_question = ""
 
-        if user_question := st.chat_input("Pregunta sobre el análisis, ej: ¿cuál es el riesgo más urgente?"):
-            st.session_state.chat_messages.append({"role": "user", "content": user_question})
-            with st.chat_message("user"):
-                st.markdown(user_question)
+        scan_ctx   = st.session_state.get("scan_json", {})
+        result_ctx = st.session_state.get("resultado_ia", {})
+        url_ctx    = st.session_state.get("url_analizada", "")
 
-            scan_ctx   = st.session_state.get("scan_json", {})
-            result_ctx = st.session_state.get("resultado_ia", {})
-            url_ctx    = st.session_state.get("url_analizada", "")
-
-            contexto = f"""Eres un asistente experto en ciberseguridad. El usuario ya realizó un análisis de seguridad web.
+        contexto = f"""Eres un asistente experto en ciberseguridad. El usuario ya realizó un análisis de seguridad web.
 Responde ÚNICAMENTE basándote en los datos del análisis proporcionado. No inventes información.
-Responde en español, de forma clara y sin tecnicismos innecesarios.
-
+Responde en español, de forma clara y concisa, sin tecnicismos innecesarios.
 URL analizada: {url_ctx}
 Hallazgos técnicos: {scan_ctx}
 Análisis de IA: {result_ctx}"""
 
-            with st.chat_message("assistant"):
-                placeholder = st.empty()
-                placeholder.markdown("Consultando el análisis...")
-                try:
-                    import anthropic
-                    try:
-                        api_key = st.secrets["ANTHROPIC_API_KEY"]
-                    except Exception:
-                        api_key = os.environ.get("ANTHROPIC_API_KEY")
+        try:
+            import anthropic
+            try:
+                api_key = st.secrets["ANTHROPIC_API_KEY"]
+            except Exception:
+                api_key = os.environ.get("ANTHROPIC_API_KEY")
+            client   = anthropic.Anthropic(api_key=api_key)
+            response = client.messages.create(
+                model="claude-sonnet-4-6",
+                max_tokens=512,
+                system=contexto,
+                messages=[{"role": "user", "content": user_question}]
+            )
+            respuesta = response.content[0].text
+        except Exception as e:
+            respuesta = f"Error al consultar: {str(e)}"
 
-                    client   = anthropic.Anthropic(api_key=api_key)
-                    response = client.messages.create(
-                        model="claude-sonnet-4-6",
-                        max_tokens=1024,
-                        system=contexto,
-                        messages=[{"role": "user", "content": user_question}]
-                    )
-                    respuesta = response.content[0].text
-                    placeholder.markdown(respuesta)
-                    st.session_state.chat_messages.append({"role": "assistant", "content": respuesta})
-                except Exception as e:
-                    error_msg = f"Error al consultar el asistente: {str(e)}"
-                    placeholder.markdown(error_msg)
-                    st.session_state.chat_messages.append({"role": "assistant", "content": error_msg})
+        st.session_state.chat_messages.append({"role": "user",      "content": user_question})
+        st.session_state.chat_messages.append({"role": "assistant", "content": respuesta})
+        st.rerun()
+
+    # Construir historial HTML para el widget
+    mensajes_html = ""
+    for m in st.session_state.chat_messages:
+        cls     = "chat-msg-bot" if m["role"] == "assistant" else "chat-msg-user"
+        texto   = m["content"].replace("\n", "<br>").replace('"', '&quot;')
+        mensajes_html += f'<div class="{cls}">{texto}</div>'
+
+    if not mensajes_html:
+        mensajes_html = '<div class="chat-msg-bot">Hola! Puedo responder preguntas sobre el análisis. ¿En qué te ayudo?</div>'
+
+    st.markdown(f"""
+    <!-- Botón flotante -->
+    <button id="chat-widget-btn" onclick="toggleChat()">💬</button>
+
+    <!-- Ventana del chat -->
+    <div id="chat-widget-window">
+        <div id="chat-widget-header">
+            <div id="chat-widget-header-icon">🛡️</div>
+            <div>
+                <div id="chat-widget-header-title">Asistente WebShield</div>
+                <div id="chat-widget-header-sub">Consulta sobre el análisis</div>
+            </div>
+            <button id="chat-widget-close" onclick="toggleChat()">✕</button>
+        </div>
+        <div id="chat-widget-messages" id="chatMessages">
+            {mensajes_html}
+        </div>
+        <div id="chat-widget-input-row">
+            <input id="chat-widget-input" type="text" placeholder="Escribe tu pregunta..."
+                   onkeydown="if(event.key==='Enter') sendMsg()"/>
+            <button id="chat-widget-send" onclick="sendMsg()">➤</button>
+        </div>
+    </div>
+
+    <script>
+    function toggleChat() {{
+        const win = document.getElementById('chat-widget-window');
+        win.classList.toggle('open');
+        if (win.classList.contains('open')) {{
+            scrollBottom();
+            document.getElementById('chat-widget-input').focus();
+        }}
+    }}
+
+    function scrollBottom() {{
+        const msgs = document.getElementById('chat-widget-messages');
+        if (msgs) msgs.scrollTop = msgs.scrollHeight;
+    }}
+
+    function sendMsg() {{
+        const input = document.getElementById('chat-widget-input');
+        const text  = input.value.trim();
+        if (!text) return;
+        input.value = '';
+
+        // Inyectar en un input oculto de Streamlit y disparar
+        const stInputs = window.parent.document.querySelectorAll('input[type="text"]');
+        for (let inp of stInputs) {{
+            if (inp.placeholder && inp.placeholder.includes('Pregunta')) {{
+                const nativeInput = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value');
+                nativeInput.set.call(inp, text);
+                inp.dispatchEvent(new Event('input', {{ bubbles: true }}));
+                setTimeout(() => {{
+                    inp.dispatchEvent(new KeyboardEvent('keydown', {{ key: 'Enter', keyCode: 13, bubbles: true }}));
+                }}, 100);
+                break;
+            }}
+        }}
+    }}
+
+    // Auto-scroll al abrir
+    window.addEventListener('load', scrollBottom);
+    setTimeout(scrollBottom, 500);
+    </script>
+    """, unsafe_allow_html=True)
+
+    # Input oculto que recibe la pregunta del widget
+    pregunta_widget = st.text_input("Pregunta al asistente", key="chat_input_hidden",
+                                     label_visibility="hidden", placeholder="Pregunta sobre el análisis")
+    if pregunta_widget:
+        st.session_state.widget_question = pregunta_widget
+        st.rerun()
 
 elif "scan_json" not in st.session_state:
     st.markdown("""
