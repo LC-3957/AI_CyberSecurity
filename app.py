@@ -20,7 +20,7 @@ from backend.main import (
 )
 from login import mostrar_login, cerrar_sesion
 
-# ── CONFIG — debe ir antes del login ──
+# ── CONFIG ──
 st.set_page_config(
     page_title="WebShield AI",
     page_icon="🛡️",
@@ -37,12 +37,57 @@ css_path = os.path.join(ROOT_DIR, "assets", "style.css")
 with open(css_path, encoding="utf-8") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# ── BOTÓN CERRAR SESIÓN ──
+# ── CSS EXTRA PARA MEJORAS ──
+st.markdown("""
+<style>
+/* Texto del chatbot siempre oscuro */
+[data-testid="stChatMessageContent"] p,
+[data-testid="stChatMessageContent"] li,
+[data-testid="stChatMessageContent"] span,
+[data-testid="stChatMessageContent"] strong,
+[data-testid="stChatMessageContent"] em,
+[data-testid="stChatMessageContent"] code {
+    color: #0f172a !important;
+}
+[data-testid="stChatMessageContent"] {
+    background: white !important;
+    border-radius: 10px !important;
+    padding: 10px 14px !important;
+}
+
+/* Usuario más grande */
+.usuario-bar {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    font-family: 'Inter', sans-serif;
+    padding: 6px 0;
+}
+
+/* Input con primera letra mayúscula */
+.stTextInput input {
+    text-transform: capitalize;
+}
+.stTextInput input[type="password"] {
+    text-transform: none !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ── AVISO ETICO ARRIBA ──
+st.markdown("""
+<div class="etica-box">
+    <span>AVISO ETICO</span> &nbsp;Esta herramienta esta disenada exclusivamente para analizar sitios web
+    sobre los que se tiene <span>autorizacion explicita</span>.
+</div>
+""", unsafe_allow_html=True)
+
+# ── USUARIO Y BOTON SALIR ──
 nombre = st.session_state.get("nombre_actual", "")
 col_a, col_b = st.columns([8, 1])
 with col_a:
     st.markdown(
-        f'<div style="font-size:0.75rem; color:#475569; font-family:monospace;">👤 {nombre}</div>',
+        f'<div class="usuario-bar">Bienvenido, {nombre}</div>',
         unsafe_allow_html=True
     )
 with col_b:
@@ -54,25 +99,17 @@ st.markdown("""
 <div class="hero-wrapper">
     <div class="hero-eyebrow">Web Security Intelligence Platform</div>
     <h1 class="hero-title">WebShield AI</h1>
-    <p class="hero-sub">Análisis de seguridad web asistido por inteligencia artificial.<br>
+    <p class="hero-sub">Analisis de seguridad web asistido por inteligencia artificial.<br>
     Detecta, interpreta y prioriza riesgos en segundos.</p>
     <div class="hero-divider"></div>
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown("""
-<div class="section-title-main">Análisis de seguridad web asistido por IA</div>
+<div class="section-title-main">Analisis de seguridad web asistido por IA</div>
 <div class="section-sub-main">
     Detecta, interpreta y prioriza riesgos en segundos.<br>
     Inteligencia artificial aplicada a la defensa digital.
-</div>
-""", unsafe_allow_html=True)
-
-# ───────── AVISO ÉTICO ─────────
-st.markdown("""
-<div class="etica-box">
-    <span>⚠️ AVISO ÉTICO</span> &nbsp;Esta herramienta está diseñada exclusivamente para analizar sitios web
-    sobre los que se tiene <span>autorización explícita</span>.
 </div>
 """, unsafe_allow_html=True)
 
@@ -83,130 +120,147 @@ col1, col2 = st.columns([5, 1])
 with col1:
     url_input = st.text_input("url", placeholder="https://sitio.com", label_visibility="collapsed")
 with col2:
-    analizar = st.button("ANALIZAR →", type="primary", use_container_width=True)
+    analizar = st.button("ANALIZAR", type="primary", use_container_width=True)
 
 # ───────── LÓGICA PRINCIPAL ─────────
 if analizar:
     if not url_input.startswith("http"):
-        st.error("⚠ Ingresa una URL válida que comience con http:// o https://")
+        st.error("Ingresa una URL valida que comience con http:// o https://")
         st.stop()
 
-    # ── Ejecutar las 6 validaciones directamente (sin servidor FastAPI) ──
-    with st.spinner("[ 01/02 ] Ejecutando validaciones de seguridad..."):
-        try:
-            scan_json = {
-                "url_analizada":     url_input,
-                "headers_seguridad": revisar_headers(url_input),
-                "ssl_valido":        validar_ssl(url_input),
-                "tecnologias":       detectar_tecnologias(url_input),
-                "puertos_abiertos":  escanear_puertos(url_input),
-                "formularios":       detectar_formularios(url_input),
-                "rutas_expuestas":   buscar_rutas(url_input)
-            }
-        except Exception as e:
-            st.error(f"❌ Error al ejecutar el análisis: {e}")
-            st.stop()
+    # Contenedor fijo para el progreso — no hace scroll
+    progreso_container = st.container()
 
-    # ── Analizar con IA ──
-    with st.spinner("[ 02/02 ] Procesando hallazgos con inteligencia artificial..."):
+    with progreso_container:
+        st.info(f"Analizando: **{url_input}**")
+        barra = st.progress(0, text="Iniciando analisis...")
+
+        barra.progress(10, text="Revisando encabezados HTTP de seguridad...")
+        headers_seg = revisar_headers(url_input)
+
+        barra.progress(30, text="Validando certificado SSL/HTTPS...")
+        ssl_ok = validar_ssl(url_input)
+
+        barra.progress(50, text="Detectando tecnologias visibles...")
+        tecnologias = detectar_tecnologias(url_input)
+
+        barra.progress(65, text="Escaneando puertos...")
+        puertos = escanear_puertos(url_input)
+
+        barra.progress(80, text="Buscando formularios y rutas expuestas...")
+        formularios = detectar_formularios(url_input)
+        rutas       = buscar_rutas(url_input)
+
+        barra.progress(100, text="Validaciones completadas. Procesando con IA...")
+
+        scan_json = {
+            "url_analizada":     url_input,
+            "headers_seguridad": headers_seg,
+            "ssl_valido":        ssl_ok,
+            "tecnologias":       tecnologias,
+            "puertos_abiertos":  puertos,
+            "formularios":       formularios,
+            "rutas_expuestas":   rutas
+        }
+
         try:
             resultado_ia = analizar_completo(scan_json)
         except Exception as e:
-            st.error(f"❌ Error en análisis IA: {e}")
+            st.error(f"Error en analisis IA: {e}")
             st.stop()
 
-    # ── Guardar en sesión para el chatbot ──
+        barra.empty()
+
+    # Guardar en sesion
     st.session_state["scan_json"]     = scan_json
     st.session_state["resultado_ia"]  = resultado_ia
     st.session_state["url_analizada"] = url_input
-    st.session_state["chat_messages"] = []
+    # NO resetear chat_messages para no borrar el historial
 
-    # ── Mostrar las 5 secciones de IA ──
-    st.markdown(f'<div class="result-card">{resultado_ia["resumen"]}</div>',          unsafe_allow_html=True)
-    st.markdown(f'<div class="result-card">{resultado_ia["riesgos"]}</div>',          unsafe_allow_html=True)
-    st.markdown(f'<div class="result-card">{resultado_ia["impacto"]}</div>',          unsafe_allow_html=True)
-    st.markdown(f'<div class="result-card">{resultado_ia["mitigaciones"]}</div>',     unsafe_allow_html=True)
-    st.markdown(f'<div class="result-card">{resultado_ia["resumen_ejecutivo"]}</div>',unsafe_allow_html=True)
+# ── Mostrar resultados si hay analisis en sesion ──
+if "resultado_ia" in st.session_state:
+    r = st.session_state["resultado_ia"]
 
-elif "scan_json" not in st.session_state:
-    st.markdown("""
-    <div class="empty-state">
-        <div class="empty-state-icon">🛡️</div>
-        <div class="empty-state-text">INGRESA UNA URL PARA COMENZAR</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(f'<div class="result-card">{r["resumen"]}</div>',           unsafe_allow_html=True)
+    st.markdown(f'<div class="result-card">{r["riesgos"]}</div>',           unsafe_allow_html=True)
+    st.markdown(f'<div class="result-card">{r["impacto"]}</div>',           unsafe_allow_html=True)
+    st.markdown(f'<div class="result-card">{r["mitigaciones"]}</div>',      unsafe_allow_html=True)
+    st.markdown(f'<div class="result-card">{r["resumen_ejecutivo"]}</div>', unsafe_allow_html=True)
 
-# ───────── CHATBOT ─────────
-if "scan_json" in st.session_state:
+    # ───────── CHATBOT ─────────
+    with st.expander("Consulta al Asistente de Seguridad", expanded=True):
 
-    st.markdown("---")
-    st.markdown("### 💬 Asistente de consultas")
+        if "chat_messages" not in st.session_state:
+            st.session_state.chat_messages = []
 
-    if "chat_messages" not in st.session_state:
-        st.session_state.chat_messages = []
+        # Mostrar historial
+        for message in st.session_state.chat_messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
 
-    for message in st.session_state.chat_messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+        if user_question := st.chat_input("Pregunta sobre el analisis, ej: cual es el riesgo mas urgente?"):
 
-    if user_question := st.chat_input("Pregunta algo sobre el análisis, ej: ¿cuál es el riesgo más urgente?"):
+            st.session_state.chat_messages.append({"role": "user", "content": user_question})
+            with st.chat_message("user"):
+                st.markdown(user_question)
 
-        st.session_state.chat_messages.append({"role": "user", "content": user_question})
-        with st.chat_message("user"):
-            st.markdown(user_question)
+            scan_ctx   = st.session_state.get("scan_json", {})
+            result_ctx = st.session_state.get("resultado_ia", {})
+            url_ctx    = st.session_state.get("url_analizada", "")
 
-        scan_ctx   = st.session_state.get("scan_json", {})
-        result_ctx = st.session_state.get("resultado_ia", {})
-        url_ctx    = st.session_state.get("url_analizada", "")
-
-        contexto = f"""
-Eres un asistente experto en ciberseguridad. El usuario ya realizó un análisis de seguridad web.
-Responde ÚNICAMENTE basándote en los datos del análisis proporcionado. No inventes información.
+            contexto = f"""
+Eres un asistente experto en ciberseguridad. El usuario ya realizo un analisis de seguridad web.
+Responde UNICAMENTE basandote en los datos del analisis proporcionado. No inventes informacion.
 Responde en español, de forma clara y sin tecnicismos innecesarios.
 
 URL analizada: {url_ctx}
 
-Hallazgos técnicos del escaneo:
+Hallazgos tecnicos del escaneo:
 {scan_ctx}
 
-Análisis de IA (resumen, riesgos, impacto, mitigaciones, resumen ejecutivo):
+Analisis de IA (resumen, riesgos, impacto, mitigaciones, resumen ejecutivo):
 {result_ctx}
 """
 
-        with st.chat_message("assistant"):
-            placeholder = st.empty()
-            placeholder.markdown("🤔 *Consultando el análisis...*")
+            with st.chat_message("assistant"):
+                placeholder = st.empty()
+                placeholder.markdown("Consultando el analisis...")
 
-            try:
-                import anthropic
-
-                # Lee la API key desde Streamlit secrets o .env
                 try:
-                    api_key = st.secrets["ANTHROPIC_API_KEY"]
-                except Exception:
-                    api_key = os.environ.get("ANTHROPIC_API_KEY")
+                    import anthropic
+                    try:
+                        api_key = st.secrets["ANTHROPIC_API_KEY"]
+                    except Exception:
+                        api_key = os.environ.get("ANTHROPIC_API_KEY")
 
-                client = anthropic.Anthropic(api_key=api_key)
+                    client = anthropic.Anthropic(api_key=api_key)
+                    response = client.messages.create(
+                        model="claude-sonnet-4-6",
+                        max_tokens=1024,
+                        system=contexto,
+                        messages=[{"role": "user", "content": user_question}]
+                    )
 
-                response = client.messages.create(
-                    model="claude-sonnet-4-6",
-                    max_tokens=1024,
-                    system=contexto,
-                    messages=[{"role": "user", "content": user_question}]
-                )
+                    respuesta = response.content[0].text
+                    placeholder.markdown(respuesta)
+                    st.session_state.chat_messages.append({"role": "assistant", "content": respuesta})
 
-                respuesta = response.content[0].text
-                placeholder.markdown(respuesta)
-                st.session_state.chat_messages.append({"role": "assistant", "content": respuesta})
+                except Exception as e:
+                    error_msg = f"Error al consultar el asistente: {str(e)}"
+                    placeholder.markdown(error_msg)
+                    st.session_state.chat_messages.append({"role": "assistant", "content": error_msg})
 
-            except Exception as e:
-                error_msg = f"❌ Error al consultar el asistente: `{str(e)}`"
-                placeholder.markdown(error_msg)
-                st.session_state.chat_messages.append({"role": "assistant", "content": error_msg})
+elif "scan_json" not in st.session_state:
+    st.markdown("""
+    <div class="empty-state">
+        <div class="empty-state-icon"></div>
+        <div class="empty-state-text">INGRESA UNA URL PARA COMENZAR</div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ───────── FOOTER ─────────
 st.markdown("""
 <div class="footer">
-    WEBSHIELD AI · HERRAMIENTAS DE CIBERSEGURIDAD · PROF. PABLO NÁCHEZ · UNIVERSIDAD IBEROAMERICANA LEÓN 2026
+    WEBSHIELD AI · HERRAMIENTAS DE CIBERSEGURIDAD · PROF. PABLO NACHEZ · UNIVERSIDAD IBEROAMERICANA LEON 2026
 </div>
 """, unsafe_allow_html=True)

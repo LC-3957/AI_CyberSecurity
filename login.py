@@ -1,14 +1,8 @@
 """
-login.py — Sistema de autenticación seguro
+login.py — Sistema de autenticacion seguro
 Proyecto Final: Asistente de Seguridad Web con IA
-Materia: Herramientas de Ciberseguridad | Prof. Pablo Náchez
-Universidad Iberoamericana León — 2026
-
-Características de seguridad:
-- Contraseñas hasheadas con bcrypt (no se guardan en texto plano)
-- Bloqueo temporal tras 3 intentos fallidos
-- Token de sesión firmado con HMAC-SHA256
-- Tiempo de sesión limitado a 2 horas
+Materia: Herramientas de Ciberseguridad | Prof. Pablo Nachez
+Universidad Iberoamericana Leon — 2026
 """
 
 import bcrypt
@@ -22,13 +16,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # ────────────────────────────────────────────
-#  USUARIOS AUTORIZADOS
-#  Las contraseñas están hasheadas con bcrypt
-#  Para generar un nuevo hash: bcrypt.hashpw(b"tupassword", bcrypt.gensalt())
+#  USUARIOS — hashes generados con generar_hashes.py
 # ────────────────────────────────────────────
-
-# Para generar hashes nuevos corre: python generar_hashes.py
-
 USUARIOS = {
     "lyz": {
         "nombre": "Lyzzet Valenzuela",
@@ -39,18 +28,15 @@ USUARIOS = {
         "hash": "$2b$12$0FxH5r.QGXoY24RbG3XWe.QMQ7qAeGfGKBxlFh7RIIiadb8WSvFgK"
     },
     "emi": {
-        "nombre": "Francisco Emiliano Guillén",
+        "nombre": "Francisco Emiliano Guillen",
         "hash": "$2b$12$8e6jPLNiYfNssol/yhZ5DuANa1xl7nQploYLg5d1yq5LpOkt2jPCu"
     }
 }
 
-# ────────────────────────────────────────────
-#  CONFIGURACIÓN DE SEGURIDAD
-# ────────────────────────────────────────────
-MAX_INTENTOS      = 3          # intentos antes de bloqueo
-BLOQUEO_SEGUNDOS  = 300        # 5 minutos de bloqueo
-SESION_SEGUNDOS   = 7200       # 2 horas de sesión
-SECRET_KEY        = os.environ.get("SESSION_SECRET", "webshield-ibero-2026-secret-key")
+MAX_INTENTOS     = 3
+BLOQUEO_SEGUNDOS = 300
+SESION_SEGUNDOS  = 7200
+SECRET_KEY       = st.secrets.get("SESSION_SECRET", os.environ.get("SESSION_SECRET", "webshield-ibero-2026"))
 
 
 # ────────────────────────────────────────────
@@ -58,89 +44,61 @@ SECRET_KEY        = os.environ.get("SESSION_SECRET", "webshield-ibero-2026-secre
 # ────────────────────────────────────────────
 
 def _generar_token(usuario: str) -> str:
-    """Genera un token de sesión firmado con HMAC-SHA256."""
     timestamp = str(int(time.time()))
     mensaje   = f"{usuario}:{timestamp}"
-    firma     = hmac.new(
-        SECRET_KEY.encode(),
-        mensaje.encode(),
-        hashlib.sha256
-    ).hexdigest()
+    firma     = hmac.new(SECRET_KEY.encode(), mensaje.encode(), hashlib.sha256).hexdigest()
     return f"{mensaje}:{firma}"
 
 
 def _validar_token(token: str) -> str | None:
-    """
-    Valida el token de sesión.
-    Devuelve el nombre de usuario si es válido, None si no.
-    """
     try:
         partes = token.split(":")
         if len(partes) != 3:
             return None
-
         usuario, timestamp, firma_recibida = partes
-
-        # Verificar firma
-        mensaje      = f"{usuario}:{timestamp}"
-        firma_esperada = hmac.new(
-            SECRET_KEY.encode(),
-            mensaje.encode(),
-            hashlib.sha256
-        ).hexdigest()
-
+        mensaje        = f"{usuario}:{timestamp}"
+        firma_esperada = hmac.new(SECRET_KEY.encode(), mensaje.encode(), hashlib.sha256).hexdigest()
         if not hmac.compare_digest(firma_recibida, firma_esperada):
             return None
-
-        # Verificar expiración
         if time.time() - int(timestamp) > SESION_SEGUNDOS:
             return None
-
         return usuario
-
     except Exception:
         return None
 
 
-def _esta_bloqueado(usuario: str) -> tuple[bool, int]:
-    """
-    Verifica si un usuario está bloqueado por intentos fallidos.
-    Devuelve (bloqueado, segundos_restantes).
-    """
-    clave_intentos = f"intentos_{usuario}"
-    clave_tiempo   = f"bloqueo_tiempo_{usuario}"
+# ── Bloqueo persistente usando query_params como storage temporal ──
+def _clave_bloqueo(usuario: str) -> str:
+    return f"bloqueo_{usuario}"
 
-    intentos      = st.session_state.get(clave_intentos, 0)
-    tiempo_bloqueo = st.session_state.get(clave_tiempo, 0)
+def _clave_intentos(usuario: str) -> str:
+    return f"intentos_{usuario}"
+
+def _esta_bloqueado(usuario: str) -> tuple[bool, int]:
+    intentos       = st.session_state.get(_clave_intentos(usuario), 0)
+    tiempo_bloqueo = st.session_state.get(_clave_bloqueo(usuario), 0)
 
     if intentos >= MAX_INTENTOS and tiempo_bloqueo > 0:
         restante = int(tiempo_bloqueo - time.time())
         if restante > 0:
             return True, restante
         else:
-            # Bloqueo expiró, resetear
-            st.session_state[clave_intentos] = 0
-            st.session_state[clave_tiempo]   = 0
+            st.session_state[_clave_intentos(usuario)] = 0
+            st.session_state[_clave_bloqueo(usuario)]  = 0
 
     return False, 0
 
 
 def _registrar_intento_fallido(usuario: str):
-    """Registra un intento fallido y bloquea si se superó el límite."""
-    clave_intentos = f"intentos_{usuario}"
-    clave_tiempo   = f"bloqueo_tiempo_{usuario}"
-
-    intentos = st.session_state.get(clave_intentos, 0) + 1
-    st.session_state[clave_intentos] = intentos
-
+    intentos = st.session_state.get(_clave_intentos(usuario), 0) + 1
+    st.session_state[_clave_intentos(usuario)] = intentos
     if intentos >= MAX_INTENTOS:
-        st.session_state[clave_tiempo] = time.time() + BLOQUEO_SEGUNDOS
+        st.session_state[_clave_bloqueo(usuario)] = time.time() + BLOQUEO_SEGUNDOS
 
 
 def _resetear_intentos(usuario: str):
-    """Resetea los intentos fallidos tras login exitoso."""
-    st.session_state[f"intentos_{usuario}"] = 0
-    st.session_state[f"bloqueo_tiempo_{usuario}"] = 0
+    st.session_state[_clave_intentos(usuario)] = 0
+    st.session_state[_clave_bloqueo(usuario)]  = 0
 
 
 def verificar_credenciales(usuario: str, password: str) -> bool:
@@ -155,16 +113,12 @@ def verificar_credenciales(usuario: str, password: str) -> bool:
 
 
 # ────────────────────────────────────────────
-#  FUNCIÓN PRINCIPAL — Mostrar pantalla de login
+#  PANTALLA DE LOGIN
 # ────────────────────────────────────────────
 
 def mostrar_login() -> bool:
-    """
-    Muestra la pantalla de login.
-    Devuelve True si el usuario está autenticado, False si no.
-    """
 
-    # ── Verificar sesión activa ──
+    # Verificar sesion activa
     token = st.session_state.get("session_token")
     if token:
         usuario = _validar_token(token)
@@ -173,125 +127,155 @@ def mostrar_login() -> bool:
             st.session_state["nombre_actual"]  = USUARIOS[usuario]["nombre"]
             return True
         else:
-            # Token expirado
             del st.session_state["session_token"]
 
-    # ── CSS del login ──
+    # CSS del login
     st.markdown("""
     <style>
-    .login-wrapper {
-        max-width: 420px;
-        margin: 6rem auto 0;
-        padding: 2.5rem;
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 16px;
-        backdrop-filter: blur(10px);
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+    html, body, [data-testid="stAppViewContainer"] {
+        background: linear-gradient(135deg, #e6eef8, #f8fbff) !important;
+        font-family: 'Inter', sans-serif !important;
     }
+
+    #MainMenu, footer, header { visibility: hidden; }
+
     .login-logo {
         text-align: center;
-        font-size: 2.5rem;
-        margin-bottom: 0.5rem;
+        font-size: 3rem;
+        margin-bottom: 0.4rem;
     }
     .login-title {
         text-align: center;
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: #f1f5f9;
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #1e3a8a;
         margin-bottom: 0.2rem;
+        font-family: 'Inter', sans-serif;
     }
     .login-sub {
         text-align: center;
-        font-size: 0.75rem;
-        color: #475569;
-        margin-bottom: 2rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        font-family: 'Space Mono', monospace;
+        font-size: 1rem;
+        color: #314259;
+        margin-bottom: 1.8rem;
+        font-family: 'Inter', sans-serif;
     }
-    .security-badge {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: rgba(0,255,170,0.05);
-        border: 1px solid rgba(0,255,170,0.15);
-        border-radius: 8px;
-        padding: 0.6rem 1rem;
+    .login-badge {
+        background: linear-gradient(90deg, #07163e, #203054, #394d77);
+        color: white;
+        padding: 14px 18px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        text-align: center;
         margin-bottom: 1.5rem;
-        font-size: 0.72rem;
-        color: #94a3b8;
-        font-family: 'Space Mono', monospace;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
     }
-    .security-dot {
-        width: 8px; height: 8px;
-        border-radius: 50%;
-        background: #00ffaa;
-        box-shadow: 0 0 6px #00ffaa;
-        flex-shrink: 0;
+
+    /* Labels del form mas grandes */
+    .stTextInput label {
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        color: #1e3a8a !important;
+    }
+
+    /* Input text */
+    .stTextInput input {
+        font-size: 1rem !important;
+        padding: 12px !important;
+        border-radius: 10px !important;
+        border: 2px solid #cbd5e1 !important;
+        background: white !important;
+        color: #0f172a !important;
+        text-transform: capitalize;
+    }
+    .stTextInput input[type="password"] {
+        text-transform: none !important;
+    }
+    .stTextInput input:focus {
+        border-color: #2563eb !important;
+        box-shadow: 0 0 0 3px rgba(37,99,235,0.15) !important;
+    }
+
+    /* Boton login */
+    [data-testid="stFormSubmitButton"] button {
+        background: linear-gradient(90deg, #9e0e0e, #ef4444, #f97316) !important;
+        color: white !important;
+        font-size: 1rem !important;
+        font-weight: 700 !important;
+        border-radius: 10px !important;
+        border: none !important;
+        padding: 12px !important;
+        width: 100% !important;
+        margin-top: 0.5rem !important;
+    }
+    [data-testid="stFormSubmitButton"] button:hover {
+        opacity: 0.9 !important;
+        transform: translateY(-1px) !important;
+    }
+
+    .login-footer {
+        text-align: center;
+        font-size: 0.75rem;
+        color: #94a3b8;
+        margin-top: 1.2rem;
+        font-family: 'Inter', sans-serif;
     }
     </style>
     """, unsafe_allow_html=True)
 
-    # ── UI del login ──
-    st.markdown("""
-    <div class="login-wrapper">
-        <div class="login-logo">🛡️</div>
-        <div class="login-title">WebShield AI</div>
-        <div class="login-sub">Acceso restringido · Solo equipo autorizado</div>
-        <div class="security-badge">
-            <div class="security-dot"></div>
-            Conexión segura · Sesión cifrada · Acceso auditado
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    # Layout centrado
+    _, col, _ = st.columns([1, 1.4, 1])
 
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
+    with col:
+        st.markdown('<div class="login-logo">🛡️</div>', unsafe_allow_html=True)
+        st.markdown('<div class="login-title">WebShield AI</div>', unsafe_allow_html=True)
+        st.markdown('<div class="login-sub">Asistente de Seguridad Web con IA</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div class="login-badge">
+            Acceso restringido — Solo equipo autorizado<br>
+            Universidad Iberoamericana Leon · 2026
+        </div>
+        """, unsafe_allow_html=True)
+
         with st.form("login_form", clear_on_submit=False):
-            usuario_input  = st.text_input("👤 Usuario", placeholder="tu usuario")
-            password_input = st.text_input("🔒 Contraseña", type="password", placeholder="••••••••••")
-            submit         = st.form_submit_button("INGRESAR →", use_container_width=True, type="primary")
+            usuario_input  = st.text_input("Usuario", placeholder="Escribe tu usuario")
+            password_input = st.text_input("Contrasena", type="password", placeholder="Escribe tu contrasena")
+            submit         = st.form_submit_button("Ingresar", use_container_width=True)
 
             if submit:
                 usuario_lower = usuario_input.lower().strip()
 
-                # Verificar bloqueo
                 bloqueado, restante = _esta_bloqueado(usuario_lower)
                 if bloqueado:
-                    minutos = restante // 60
+                    minutos  = restante // 60
                     segundos = restante % 60
-                    st.error(f"🔒 Cuenta bloqueada. Intenta en {minutos}m {segundos}s")
+                    st.error(f"Cuenta bloqueada. Intenta en {minutos}m {segundos}s")
                     return False
 
-                # Verificar credenciales
                 if verificar_credenciales(usuario_lower, password_input):
                     _resetear_intentos(usuario_lower)
                     token = _generar_token(usuario_lower)
-                    st.session_state["session_token"]   = token
-                    st.session_state["usuario_actual"]  = usuario_lower
-                    st.session_state["nombre_actual"]   = USUARIOS[usuario_lower]["nombre"]
+                    st.session_state["session_token"]  = token
+                    st.session_state["usuario_actual"] = usuario_lower
+                    st.session_state["nombre_actual"]  = USUARIOS[usuario_lower]["nombre"]
                     st.rerun()
                 else:
                     _registrar_intento_fallido(usuario_lower)
-                    intentos_restantes = MAX_INTENTOS - st.session_state.get(f"intentos_{usuario_lower}", 0)
+                    intentos_usados    = st.session_state.get(_clave_intentos(usuario_lower), 0)
+                    intentos_restantes = MAX_INTENTOS - intentos_usados
                     if intentos_restantes > 0:
-                        st.error(f"❌ Usuario o contraseña incorrectos. Intentos restantes: {intentos_restantes}")
+                        st.error(f"Usuario o contrasena incorrectos. Intentos restantes: {intentos_restantes}")
                     else:
-                        st.error(f"🔒 Cuenta bloqueada por {BLOQUEO_SEGUNDOS // 60} minutos.")
+                        st.error(f"Cuenta bloqueada por {BLOQUEO_SEGUNDOS // 60} minutos.")
 
-        st.markdown("""
-        <div style="text-align:center; margin-top:1rem; font-size:0.65rem; 
-                    color:#334155; font-family:'Space Mono',monospace; letter-spacing:0.1em;">
-            ACCESO SOLO PARA MIEMBROS DEL EQUIPO<br>
-            UNIVERSIDAD IBEROAMERICANA LEÓN · 2026
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown('<div class="login-footer">WebShield AI · Herramientas de Ciberseguridad</div>', unsafe_allow_html=True)
 
     return False
 
 
 def cerrar_sesion():
-    """Cierra la sesión del usuario actual."""
     for key in ["session_token", "usuario_actual", "nombre_actual",
                 "scan_json", "resultado_ia", "url_analizada", "chat_messages"]:
         if key in st.session_state:
