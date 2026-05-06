@@ -116,22 +116,23 @@ def mostrar_login():
 
 /* Quitar borde/fondo del stForm — es la card fantasma */
 [data-testid="stForm"] {{
-    background: transparent !important;
-    border: none !important;
-    padding: 0 !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
+    background: linear-gradient(160deg, #0d1f4e 0%, #132060 60%, #1a2d6b 100%) !important;
+    border: 1px solid rgba(255,255,255,0.07) !important;
+    border-top: none !important;
+    border-radius: 0 0 20px 20px !important;
+    padding: 0 2.2rem 2rem !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4) !important;
+    margin-top: -4px !important;
 }}
 
 /* ── CARD del formulario — azul marino como mockup ── */
 .login-card {{
     background: linear-gradient(160deg, #0d1f4e 0%, #132060 60%, #1a2d6b 100%);
-    border-radius: 20px;
-    padding: 2.5rem 2.2rem 2rem;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    border-radius: 20px 20px 0 0;
+    padding: 2.5rem 2.2rem 1.8rem;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.07);
     width: 100%;
     margin-top: 5rem;
-    border: 1px solid rgba(255,255,255,0.07);
 }}
 
 .logo-shield {{ text-align:center; font-size:2.8rem; margin-bottom:0.35rem; }}
@@ -267,12 +268,15 @@ def mostrar_login():
                     <div class="access-sub">Universidad Iberoamericana León &nbsp;·&nbsp; 2026</div>
                 </div>
             </div>
+            <div class="form-labels-inside">
+                <div class="field-label">USUARIO</div>
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
         with st.form("login_form", clear_on_submit=False):
-            usuario_input  = st.text_input("USUARIO", placeholder="tu usuario")
-            password_input = st.text_input("CONTRASEÑA", type="password", placeholder="tu contraseña")
+            usuario_input  = st.text_input("USUARIO", placeholder="tu usuario", label_visibility="collapsed")
+            password_input = st.text_input("CONTRASEÑA", type="password", placeholder="tu contraseña", label_visibility="collapsed")
             submit         = st.form_submit_button("INGRESAR →", use_container_width=True)
 
             if submit:
