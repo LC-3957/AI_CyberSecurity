@@ -2,7 +2,7 @@
 login.py — WebShield AI | Formulario centrado lado derecho, fondo natural
 """
 
-import bcrypt, hmac, hashlib, time, os
+import bcrypt, hmac, hashlib, time, os, json, tempfile
 import streamlit as st
 from dotenv import load_dotenv
 load_dotenv()
@@ -21,6 +21,27 @@ try:
     SECRET_KEY = st.secrets["SESSION_SECRET"]
 except Exception:
     SECRET_KEY = os.environ.get("SESSION_SECRET", "webshield-ibero-2026")
+
+IBERO_URL = "https://raw.githubusercontent.com/LC-3957/AI_CyberSecurity/main/assets/images/ibero.jpeg"
+
+# ── Archivo persistente de bloqueos (sobrevive recargas) ──
+_LOCK_FILE = os.path.join(tempfile.gettempdir(), "webshield_lockouts.json")
+
+def _leer_bloqueos():
+    try:
+        if os.path.exists(_LOCK_FILE):
+            with open(_LOCK_FILE, "r") as f:
+                return json.load(f)
+    except Exception:
+        pass
+    return {}
+
+def _guardar_bloqueos(data):
+    try:
+        with open(_LOCK_FILE, "w") as f:
+            json.dump(data, f)
+    except Exception:
+        pass
 
 IBERO_URL = "https://raw.githubusercontent.com/LC-3957/AI_CyberSecurity/main/assets/images/ibero.jpeg"
 
@@ -45,24 +66,32 @@ def _validar_token(token):
         return None
 
 def _bloqueado(usuario):
-    intentos = st.session_state.get(f"intentos_{usuario}", 0)
-    tb       = st.session_state.get(f"bloqueo_{usuario}", 0)
+    data = _leer_bloqueos()
+    info = data.get(usuario, {})
+    intentos = info.get("intentos", 0)
+    tb       = info.get("bloqueo", 0)
     if intentos >= MAX_INTENTOS and tb > 0:
         restante = int(tb - time.time())
-        if restante > 0: return True, restante
-        st.session_state[f"intentos_{usuario}"] = 0
-        st.session_state[f"bloqueo_{usuario}"]  = 0
+        if restante > 0:
+            return True, restante
+        # Expiró — limpiar
+        data[usuario] = {"intentos": 0, "bloqueo": 0}
+        _guardar_bloqueos(data)
     return False, 0
 
 def _fallo(usuario):
-    n = st.session_state.get(f"intentos_{usuario}", 0) + 1
-    st.session_state[f"intentos_{usuario}"] = n
-    if n >= MAX_INTENTOS:
-        st.session_state[f"bloqueo_{usuario}"] = time.time() + BLOQUEO_SEGUNDOS
+    data = _leer_bloqueos()
+    info = data.get(usuario, {"intentos": 0, "bloqueo": 0})
+    info["intentos"] = info.get("intentos", 0) + 1
+    if info["intentos"] >= MAX_INTENTOS:
+        info["bloqueo"] = time.time() + BLOQUEO_SEGUNDOS
+    data[usuario] = info
+    _guardar_bloqueos(data)
 
 def _reset(usuario):
-    st.session_state[f"intentos_{usuario}"] = 0
-    st.session_state[f"bloqueo_{usuario}"]  = 0
+    data = _leer_bloqueos()
+    data[usuario] = {"intentos": 0, "bloqueo": 0}
+    _guardar_bloqueos(data)
 
 def verificar_credenciales(usuario, password):
     usuario = usuario.lower().strip()
@@ -251,9 +280,9 @@ def mostrar_login():
     transform: translateY(0px) scale(0.99) !important;
 }}
 
-/* ── FEATURES — card celeste, hover, iconos grandes ── */
+/* ── FEATURES — card , hover, iconos grandes ── */
 .features-card {{
-    background: #425D78;
+    background: #E5EFFF;
     border-radius: 16px;
     padding: 1.6rem 1.5rem;
     margin-top: 1.2rem;
@@ -378,19 +407,19 @@ def mostrar_login():
         <div class="features-card">
             <div class="features-row">
                 <div class="feat">
-                    <div class="feat-icon">🛡️</div>
-                    <div class="feat-title">Protección inteligente</div>
-                    <div class="feat-desc">IA que identifica y previene amenazas web en tiempo real.</div>
+                    <div class="feat-icon">🔎</div>
+                    <div class="feat-title">Escaneo web</div>
+                    <div class="feat-desc">Detecta vulnerabilidades en headers, SSL, puertos y tecnologías expuestas.</div>
                 </div>
                 <div class="feat">
-                    <div class="feat-icon">🔍</div>
-                    <div class="feat-title">Análisis continuo</div>
-                    <div class="feat-desc">Monitoreo y análisis de sitios para mantenerte seguro.</div>
+                    <div class="feat-icon">🤖</div>
+                    <div class="feat-title">Análisis con IA</div>
+                    <div class="feat-desc">Clasifica riesgos y explica cada hallazgo con recomendaciones concretas.</div>
                 </div>
                 <div class="feat">
-                    <div class="feat-icon">🔒</div>
-                    <div class="feat-title">Confidencial y seguro</div>
-                    <div class="feat-desc">Datos protegidos con los más altos estándares.</div>
+                    <div class="feat-icon">💬</div>
+                    <div class="feat-title">Asistente de dudas</div>
+                    <div class="feat-desc">Pregúntale al asistente sobre los resultados del análisis en tiempo real.</div>
                 </div>
             </div>
         </div>
