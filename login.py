@@ -98,14 +98,7 @@ def mostrar_login():
 
 /* ── FONDO CON IMAGEN IBERO ── */
 [data-testid="stAppViewContainer"] {
-    background-image:
-        linear-gradient(to right,
-            rgba(7,22,62,0.92) 0%,
-            rgba(7,22,62,0.70) 35%,
-            rgba(7,22,62,0.20) 60%,
-            rgba(7,22,62,0.05) 80%)
-        ,
-        url("https://raw.githubusercontent.com/LC-3957/AI_CyberSecurity/main/assets/images/ibero.jpeg") !important;
+    background-image: url("https://raw.githubusercontent.com/LC-3957/AI_CyberSecurity/main/assets/images/ibero.jpeg") !important;
     background-size: cover !important;
     background-position: center right !important;
     background-repeat: no-repeat !important;
