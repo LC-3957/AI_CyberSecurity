@@ -125,7 +125,7 @@ def mostrar_login():
     margin-top: -4px !important;
 }}
 
-/* ── CARD del formulario — azul marino como mockup ── */
+/* ── CARD del formulario ── */
 .login-card {{
     background: linear-gradient(160deg, #0d1f4e 0%, #132060 60%, #1a2d6b 100%);
     border-radius: 20px 20px 0 0;
@@ -193,7 +193,7 @@ def mostrar_login():
     font-weight:800 !important; letter-spacing:0.12em !important;
     border-radius:10px !important; border:none !important;
     padding:0.82rem !important; width:100% !important;
-    margin-top:0.6rem !important; transition:all 0.2s !important;
+    margin-top:0.8rem !important; transition:all 0.2s !important;
 }}
 [data-testid="stFormSubmitButton"] > button:hover {{
     filter:brightness(1.1) !important; transform:translateY(-1px) !important;
@@ -205,8 +205,9 @@ def mostrar_login():
     display:flex; gap:1.2rem; justify-content:center;
     margin-top:1.5rem; padding-top:1.4rem;
     border-top:1px solid rgba(255,255,255,0.12);
+    
 }}
-.feat       {{ text-align:center; flex:1; }}
+.feat       {{ text-align:center; flex:1; color: black;  }}
 .feat-icon  {{ font-size:1.35rem; margin-bottom:0.2rem; }}
 .feat-title {{ font-size:0.7rem; font-weight:700; color:#c9962c; }}
 .feat-desc  {{ font-size:0.62rem; color:#94a3b8; line-height:1.4; }}
