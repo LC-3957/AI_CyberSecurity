@@ -147,6 +147,7 @@ if analizar:
             st.stop()
 
         barra.empty()
+        st.markdown('<div id="resultados-anchor"></div>', unsafe_allow_html=True)
 
     st.session_state["scan_json"]     = scan_json
     st.session_state["resultado_ia"]  = resultado_ia
@@ -189,17 +190,18 @@ if "resultado_ia" in st.session_state:
 
     # Mensaje de bienvenida si no hay historial
     if not st.session_state.chat_messages:
-        with st.chat_message("assistant"):
+        with st.chat_message("assistant", avatar="🛡️"):
             st.markdown("Hola, soy el asistente de WebShield. Puedo responder tus dudas sobre el análisis de seguridad que acabas de realizar. ¿En qué te puedo ayudar?")
 
     # Mostrar historial
     for message in st.session_state.chat_messages:
-        with st.chat_message(message["role"]):
+        avatar = "🛡️" if message["role"] == "assistant" else "👤"
+        with st.chat_message(message["role"], avatar=avatar):
             st.markdown(message["content"])
 
     if user_question := st.chat_input("Escribe tu pregunta sobre el análisis..."):
         st.session_state.chat_messages.append({"role": "user", "content": user_question})
-        with st.chat_message("user"):
+        with st.chat_message("user", avatar="👤"):
             st.markdown(user_question)
 
         scan_ctx   = st.session_state.get("scan_json", {})
@@ -212,7 +214,7 @@ URL analizada: {url_ctx}
 Hallazgos: {scan_ctx}
 Análisis IA: {result_ctx}"""
 
-        with st.chat_message("assistant"):
+        with st.chat_message("assistant", avatar="🛡️"):
             placeholder = st.empty()
             placeholder.markdown("Consultando el análisis...")
             try:
