@@ -165,7 +165,7 @@ def mostrar_login():
 
 /* Inputs — azul oscuro semitransparente */
 .stTextInput > div > div > input {{
-    background: rgba(255,255,255,0.07) !important;
+    background: rgba(0,0,0) !important;
     border: 1.5px solid rgba(255,255,255,0.18) !important;
     border-radius: 10px !important;
     color: #ffffff !important;
@@ -193,7 +193,7 @@ def mostrar_login():
     font-weight:800 !important; letter-spacing:0.12em !important;
     border-radius:10px !important; border:none !important;
     padding:0.82rem !important; width:100% !important;
-    margin-top:0.6rem !important; transition:all 0.2s !important;
+    margin-top:1.1rem !important; transition:all 0.2s !important;
 }}
 [data-testid="stFormSubmitButton"] > button:hover {{
     filter:brightness(1.1) !important; transform:translateY(-1px) !important;
@@ -206,7 +206,7 @@ def mostrar_login():
     margin-top:1.5rem; padding-top:1.4rem;
     border-top:1px solid rgba(255,255,255,0.12);
 }}
-.feat       {{ text-align:center; flex:1; }}
+.feat       {{ text-align:center; flex:1; color: black !important}}
 .feat-icon  {{ font-size:1.35rem; margin-bottom:0.2rem; }}
 .feat-title {{ font-size:0.7rem; font-weight:700; color:#c9962c; }}
 .feat-desc  {{ font-size:0.62rem; color:#94a3b8; line-height:1.4; }}
@@ -243,7 +243,6 @@ def mostrar_login():
     # Badge + Footer
     st.markdown("""
     <div class="ibero-badge">
-        <div class="ibero-circle">🏛️</div>
         <div class="ibero-info">
             <div class="ibero-name">Universidad<br>Iberoamericana<br>León</div>
         </div>
