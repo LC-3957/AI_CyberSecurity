@@ -181,28 +181,35 @@ button[kind="secondary"]:hover {
 
 /* Forzar todos los textos visibles sobre fondo crema */
 [data-testid="stMarkdownContainer"] h1 {
-    font-size: 1.3rem !important;
+    font-size: 1.5rem !important;
     color: #0f2456 !important;
-    font-weight: 700 !important;
+    font-weight: 800 !important;
     background: none !important;
+    margin-bottom: 0.5rem !important;
 }
 [data-testid="stMarkdownContainer"] h2 {
-    font-size: 1.1rem !important;
+    font-size: 1.25rem !important;
     color: #0f2456 !important;
     font-weight: 700 !important;
     background: none !important;
+    margin-bottom: 0.4rem !important;
 }
 [data-testid="stMarkdownContainer"] h3 {
-    font-size: 1rem !important;
-    color: #0f2456 !important;
+    font-size: 1.05rem !important;
+    color: #1e3a8a !important;
     font-weight: 600 !important;
     background: none !important;
+    margin-bottom: 0.3rem !important;
 }
 [data-testid="stMarkdownContainer"] p,
-[data-testid="stMarkdownContainer"] li,
+[data-testid="stMarkdownContainer"] li {
+    color: #0f172a !important;
+    font-size: 0.95rem !important;
+    background: none !important;
+    line-height: 1.7 !important;
+}
 [data-testid="stMarkdownContainer"] span {
     color: #0f172a !important;
-    font-size: 0.92rem !important;
     background: none !important;
 }
 [data-testid="stMarkdownContainer"] strong {
@@ -213,6 +220,19 @@ button[kind="secondary"]:hover {
 /* Ocultar líneas # sueltas que aparecen como texto plano */
 [data-testid="stMarkdownContainer"] > div > p:first-child {
     display: none;
+}
+
+/* ── Código inline — quitar fondo negro tipo tooltip ── */
+[data-testid="stMarkdownContainer"] p code,
+[data-testid="stMarkdownContainer"] li code {
+    background: #e8eef7 !important;
+    color: #1e3a8a !important;
+    border-radius: 5px !important;
+    padding: 0.15rem 0.4rem !important;
+    font-size: 0.85rem !important;
+    border: 1px solid #c7d7f0 !important;
+    font-family: monospace !important;
+    box-shadow: none !important;
 }
 
 /* ── BLOQUES DE CÓDIGO ── */
