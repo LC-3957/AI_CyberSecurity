@@ -227,28 +227,30 @@ if analizar:
 if "resultado_ia" in st.session_state:
     r = st.session_state["resultado_ia"]
 
-    # Botones — misma fila, mismo alto
+    # Botones — apilados, descarga más pequeño
     st.markdown("<div style='margin-top:0.5rem'></div>", unsafe_allow_html=True)
-    bcol1, bcol2, _ = st.columns([1, 1, 3])
-    with bcol1:
+    bcol, _ = st.columns([1, 3])
+    with bcol:
         st.markdown('<div class="nueva-consulta-btn">', unsafe_allow_html=True)
         if st.button("↺  Nueva consulta", type="secondary", use_container_width=True):
             for k in ["scan_json", "resultado_ia", "url_analizada", "chat_messages"]:
                 st.session_state.pop(k, None)
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
-    with bcol2:
+
         url_analizada = st.session_state.get("url_analizada", "sitio")
         try:
             pdf_bytes = generar_pdf(r, url_analizada)
             nombre = url_analizada.replace("https://","").replace("http://","").replace("/","_")[:35]
+            st.markdown('<div class="descargar-btn">', unsafe_allow_html=True)
             st.download_button(
                 label="⬇  Descargar PDF",
                 data=pdf_bytes,
                 file_name=f"webshield_{nombre}.pdf",
                 mime="application/pdf",
-                use_container_width=True
+                use_container_width=False
             )
+            st.markdown('</div>', unsafe_allow_html=True)
         except Exception as e:
             st.error(f"Error PDF: {e}")
 

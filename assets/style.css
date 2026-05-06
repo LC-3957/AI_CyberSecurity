@@ -224,7 +224,7 @@ button[kind="secondary"]:hover {
 
 /* ── CÓDIGO: bloques pre/code ── */
 [data-testid="stMarkdownContainer"] pre {
-    background: #111c27 !important;
+    background: #0f1922 !important;
     border-radius: 10px !important;
     padding: 1rem 1.2rem !important;
     font-size: 0.82rem !important;
