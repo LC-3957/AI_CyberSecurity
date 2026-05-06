@@ -1,5 +1,5 @@
 """
-login.py — WebShield AI | Layout limpio para Streamlit Cloud
+login.py — WebShield AI | Formulario centrado lado derecho, fondo natural
 """
 
 import bcrypt, hmac, hashlib, time, os
@@ -96,51 +96,33 @@ def mostrar_login():
     visibility: hidden !important; height: 0 !important; display: none !important;
 }}
 
-/* Fondo completo: imagen mitad izq, blanco mitad der */
+/* FONDO: solo la imagen, sin tocar nada mas */
 [data-testid="stAppViewContainer"] {{
-    background:
-        linear-gradient(to right,
-            transparent 0%, transparent 48%,
-            #f0f4f8 48%, #f0f4f8 100%),
-        url("{IBERO_URL}") left center / 55% auto no-repeat,
-        #f0f4f8 !important;
+    background: url("{IBERO_URL}") center center / cover no-repeat fixed !important;
     min-height: 100vh !important;
 }}
 
-/* Overlay oscuro solo sobre la imagen */
-[data-testid="stAppViewContainer"]::before {{
-    content: "";
-    position: fixed; top: 0; left: 0;
-    width: 48%; height: 100%;
-    background: rgba(7, 22, 62, 0.55);
-    z-index: 0; pointer-events: none;
-}}
-
-[data-testid="stMainBlockContainer"] {{
-    position: relative; z-index: 10;
-    padding: 0 !important; max-width: 100% !important;
+/* Sin padding extra */
+.block-container {{
+    padding: 2rem 0 5rem 0 !important;
+    max-width: 100% !important;
 }}
 [data-testid="stVerticalBlock"] {{ gap: 0 !important; }}
 
-/* Quitar padding lateral del bloque principal */
-.block-container {{
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    padding-top: 0 !important;
-    max-width: 100% !important;
+/* Quitar fondos blancos de columnas */
+[data-testid="column"] {{
+    background: transparent !important;
 }}
 
-/* Columna derecha — el panel blanco con el form */
-[data-testid="column"]:last-child {{
-    background: #f0f4f8 !important;
-    min-height: 100vh !important;
-    padding: 2.5rem 2.5rem 5rem !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
+/* ── CARD del formulario ── */
+.login-card {{
+    background: rgba(240, 244, 248, 0.97);
+    border-radius: 20px;
+    padding: 2.5rem 2.2rem 2rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    width: 100%;
 }}
 
-/* Logo y titulo */
 .logo-shield {{ text-align:center; font-size:2.8rem; margin-bottom:0.35rem; }}
 .login-title {{
     font-size:1.85rem; font-weight:800; color:#0f2456;
@@ -155,7 +137,7 @@ def mostrar_login():
 .access-card {{
     background: linear-gradient(135deg, #0f2456, #1e3a8a);
     border-radius: 14px; padding: 1rem 1.3rem; margin-bottom: 1.6rem;
-    display:flex; align-items:center; gap:0.9rem; width:100%;
+    display:flex; align-items:center; gap:0.9rem;
 }}
 .access-icon  {{ font-size:1.7rem; flex-shrink:0; }}
 .access-title {{ color:white; font-weight:700; font-size:0.9rem; margin-bottom:0.1rem; }}
@@ -183,11 +165,10 @@ def mostrar_login():
     box-shadow: 0 0 0 3px rgba(30,58,138,0.12) !important;
 }}
 
-/* Quitar borde/fondo del form de Streamlit */
+/* Quitar borde del form */
 [data-testid="stForm"] {{
     background: transparent !important;
-    border: none !important; padding: 0 !important;
-    box-shadow: none !important;
+    border: none !important; padding: 0 !important; box-shadow: none !important;
 }}
 
 /* Boton dorado */
@@ -208,14 +189,14 @@ def mostrar_login():
 .features-row {{
     display:flex; gap:1.2rem; justify-content:center;
     margin-top:1.5rem; padding-top:1.4rem;
-    border-top:1px solid #e2e8f0; width:100%;
+    border-top:1px solid #e2e8f0;
 }}
 .feat       {{ text-align:center; flex:1; }}
 .feat-icon  {{ font-size:1.35rem; margin-bottom:0.2rem; }}
 .feat-title {{ font-size:0.7rem; font-weight:700; color:#1e3a8a; }}
 .feat-desc  {{ font-size:0.62rem; color:#64748b; line-height:1.4; }}
 
-/* Badge Ibero sobre la imagen (izq) */
+/* Badge Ibero */
 .ibero-badge {{
     position:fixed; bottom:2.8rem; left:2rem;
     display:flex; align-items:center; gap:0.8rem; z-index:20;
@@ -257,10 +238,11 @@ def mostrar_login():
     </div>
     """, unsafe_allow_html=True)
 
-    # Columna izquierda vacía (zona imagen) | Columna derecha con todo el form
+    # Columna izq vacía | Columna der con card del formulario
     _, col = st.columns([1, 1])
-
     with col:
+        st.markdown('<div class="login-card">', unsafe_allow_html=True)
+
         st.markdown('<div class="logo-shield">🛡️</div>', unsafe_allow_html=True)
         st.markdown('<div class="login-title">WebShield AI</div>', unsafe_allow_html=True)
         st.markdown('<div class="login-sub">Asistente de Seguridad Web con IA</div>', unsafe_allow_html=True)
@@ -322,6 +304,8 @@ def mostrar_login():
             </div>
         </div>
         """, unsafe_allow_html=True)
+
+        st.markdown('</div>', unsafe_allow_html=True)
 
     return False
 
