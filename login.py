@@ -123,28 +123,31 @@ def mostrar_login():
     border-radius: 0 !important;
 }}
 
-/* ── CARD del formulario ── */
+/* ── CARD del formulario — azul marino como mockup ── */
 .login-card {{
-    background: rgba(240, 244, 248, 0.97);
+    background: linear-gradient(160deg, #0d1f4e 0%, #132060 60%, #1a2d6b 100%);
     border-radius: 20px;
     padding: 2.5rem 2.2rem 2rem;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     width: 100%;
+    margin-top: 5rem;
+    border: 1px solid rgba(255,255,255,0.07);
 }}
 
 .logo-shield {{ text-align:center; font-size:2.8rem; margin-bottom:0.35rem; }}
 .login-title {{
-    font-size:1.85rem; font-weight:800; color:#0f2456;
+    font-size:1.85rem; font-weight:800; color:#ffffff;
     text-align:center; margin-bottom:0.12rem;
 }}
 .login-sub {{
-    font-size:0.88rem; color:#64748b;
+    font-size:0.88rem; color:#94a3b8;
     text-align:center; margin-bottom:1.6rem;
 }}
 
-/* Card azul acceso */
+/* Card acceso — dentro del card azul */
 .access-card {{
-    background: linear-gradient(135deg, #0f2456, #1e3a8a);
+    background: rgba(7, 22, 62, 0.55);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: 14px; padding: 1rem 1.3rem; margin-bottom: 1.6rem;
     display:flex; align-items:center; gap:0.9rem;
 }}
@@ -152,26 +155,32 @@ def mostrar_login():
 .access-title {{ color:white; font-weight:700; font-size:0.9rem; margin-bottom:0.1rem; }}
 .access-sub   {{ color:#c9962c; font-size:0.74rem; font-weight:600; }}
 
-/* Labels */
+/* Labels — blancos sobre azul */
 .stTextInput label {{
     font-size:0.75rem !important; font-weight:700 !important;
-    color:#1e3a8a !important; letter-spacing:0.12em !important;
+    color:#ffffff !important; letter-spacing:0.12em !important;
     text-transform:uppercase !important;
 }}
 
-/* Inputs */
+/* Inputs — azul oscuro semitransparente */
 .stTextInput > div > div > input {{
-    background: white !important;
-    border: 1.5px solid #cbd5e1 !important;
+    background: rgba(255,255,255,0.07) !important;
+    border: 1.5px solid rgba(255,255,255,0.18) !important;
     border-radius: 10px !important;
-    color: #0f172a !important;
+    color: #ffffff !important;
     font-size: 1rem !important;
     padding: 0.75rem 1rem !important;
 }}
-.stTextInput > div > div > input::placeholder {{ color:#94a3b8 !important; }}
+.stTextInput > div > div > input::placeholder {{ color:rgba(255,255,255,0.35) !important; }}
 .stTextInput > div > div > input:focus {{
-    border-color: #1e3a8a !important;
-    box-shadow: 0 0 0 3px rgba(30,58,138,0.12) !important;
+    border-color: rgba(201,150,44,0.7) !important;
+    box-shadow: 0 0 0 3px rgba(201,150,44,0.15) !important;
+    background: rgba(255,255,255,0.1) !important;
+}}
+/* Ojo contraseña */
+.stTextInput > div > div > div > button {{
+    background: rgba(255,255,255,0.1) !important;
+    border: none !important; color: white !important; border-radius: 6px !important;
 }}
 
 
@@ -194,12 +203,12 @@ def mostrar_login():
 .features-row {{
     display:flex; gap:1.2rem; justify-content:center;
     margin-top:1.5rem; padding-top:1.4rem;
-    border-top:1px solid #e2e8f0;
+    border-top:1px solid rgba(255,255,255,0.12);
 }}
 .feat       {{ text-align:center; flex:1; }}
 .feat-icon  {{ font-size:1.35rem; margin-bottom:0.2rem; }}
-.feat-title {{ font-size:0.7rem; font-weight:700; color:#1e3a8a; }}
-.feat-desc  {{ font-size:0.62rem; color:#64748b; line-height:1.4; }}
+.feat-title {{ font-size:0.7rem; font-weight:700; color:#c9962c; }}
+.feat-desc  {{ font-size:0.62rem; color:#94a3b8; line-height:1.4; }}
 
 /* Badge Ibero */
 .ibero-badge {{
