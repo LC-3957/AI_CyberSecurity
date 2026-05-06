@@ -200,7 +200,7 @@ def mostrar_login():
 
 /* ── FEATURES en card celeste ── */
 .features-card {{
-    background: #7CB3DE;
+    background: #85ACD6;
     border-radius: 16px;
     padding: 1.4rem 1.5rem;
     margin-top: 1.2rem;
