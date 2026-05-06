@@ -28,7 +28,7 @@ with open(css_path, encoding="utf-8") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # ── TOPBAR ──
-nombre   = st.session_state.get("nombre_actual", "")
+nombre    = st.session_state.get("nombre_actual", "")
 iniciales = "".join([p[0].upper() for p in nombre.split()[:2]]) if nombre else "U"
 
 st.markdown(f"""
@@ -54,7 +54,7 @@ st.markdown("""
 # ── BIENVENIDA + SALIR ──
 col_a, col_b = st.columns([8, 1])
 with col_a:
-    st.markdown(f'<div class="usuario-bar">Bienvenido, {nombre}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="usuario-bar">Bienvenid@, {nombre}</div>', unsafe_allow_html=True)
 with col_b:
     if st.button("⇥  Salir", type="secondary"):
         cerrar_sesion()
@@ -62,15 +62,15 @@ with col_b:
 # ── HERO ──
 st.markdown("""
 <div class="main-content-wrapper">
-<div style="text-align:center; margin: 1.5rem 0 0.5rem;">
+<div style="text-align:center; margin: 1.2rem 0 0.4rem;">
     <div style="
-        width: 80px; height: 80px;
+        width: 68px; height: 68px;
         background: linear-gradient(135deg, #0f2456, #1e3a8a);
         border-radius: 50%;
         display: inline-flex; align-items: center; justify-content: center;
-        font-size: 2rem;
+        font-size: 1.7rem;
         box-shadow: 0 8px 25px rgba(15,36,86,0.35);
-        margin-bottom: 1rem;
+        margin-bottom: 0.8rem;
     ">🛡️</div>
 </div>
 <div class="section-title-main">Análisis de seguridad web asistido por IA</div>
@@ -85,7 +85,7 @@ st.markdown("""
 <div style="
     background: linear-gradient(135deg, #0d1e40, #162454);
     border-radius: 18px;
-    padding: 1.6rem 1.8rem 1.4rem;
+    padding: 1.4rem 1.8rem 1.2rem;
     box-shadow: 0 15px 40px rgba(7,22,62,0.3);
     border: 1px solid rgba(255,255,255,0.07);
     margin-bottom: 1.5rem;
@@ -101,33 +101,27 @@ with col2:
 
 st.markdown("</div>", unsafe_allow_html=True)
 
-# ── LÓGICA PRINCIPAL ──
+# ── ANÁLISIS ──
 if analizar:
     if not url_input.startswith("http"):
         st.error("Ingresa una URL válida que comience con http:// o https://")
         st.stop()
 
-    progreso_container = st.container()
-    with progreso_container:
+    with st.container():
         st.info(f"Analizando: **{url_input}**")
         barra = st.progress(0, text="Iniciando análisis...")
 
         barra.progress(10, text="Revisando encabezados HTTP de seguridad...")
         headers_seg = revisar_headers(url_input)
-
         barra.progress(30, text="Validando certificado SSL/HTTPS...")
         ssl_ok = validar_ssl(url_input)
-
         barra.progress(50, text="Detectando tecnologías visibles...")
         tecnologias = detectar_tecnologias(url_input)
-
         barra.progress(65, text="Escaneando puertos...")
         puertos = escanear_puertos(url_input)
-
         barra.progress(80, text="Buscando formularios y rutas expuestas...")
         formularios = detectar_formularios(url_input)
         rutas       = buscar_rutas(url_input)
-
         barra.progress(100, text="Validaciones completadas. Procesando con IA...")
 
         scan_json = {
@@ -147,55 +141,54 @@ if analizar:
             st.stop()
 
         barra.empty()
-        # Scroll de vuelta arriba después del análisis
-        st.markdown("""
-        <script>
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        </script>
-        """, unsafe_allow_html=True)
 
     st.session_state["scan_json"]     = scan_json
     st.session_state["resultado_ia"]  = resultado_ia
     st.session_state["url_analizada"] = url_input
+    st.rerun()
 
 # ── RESULTADOS ──
 if "resultado_ia" in st.session_state:
     r = st.session_state["resultado_ia"]
 
-    # Botón limpiar — alineado a la derecha, separado
+    # Botón Nueva consulta — estilo diferenciado
     _, bcol = st.columns([5, 1])
     with bcol:
+        st.markdown('<div class="nueva-consulta-btn">', unsafe_allow_html=True)
         if st.button("↺  Nueva consulta", type="secondary", use_container_width=True):
             for k in ["scan_json", "resultado_ia", "url_analizada", "chat_messages"]:
                 st.session_state.pop(k, None)
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown("<div style='margin-bottom:0.5rem'></div>", unsafe_allow_html=True)
-
-    st.markdown(f'<div class="result-card">{r["resumen"]}</div>',           unsafe_allow_html=True)
-    st.markdown(f'<div class="result-card">{r["riesgos"]}</div>',           unsafe_allow_html=True)
-    st.markdown(f'<div class="result-card">{r["impacto"]}</div>',           unsafe_allow_html=True)
-    st.markdown(f'<div class="result-card">{r["mitigaciones"]}</div>',      unsafe_allow_html=True)
-    st.markdown(f'<div class="result-card">{r["resumen_ejecutivo"]}</div>', unsafe_allow_html=True)
+    # Resultados con st.markdown nativo (renderiza Markdown correctamente)
+    for seccion in ["resumen", "riesgos", "impacto", "mitigaciones", "resumen_ejecutivo"]:
+        with st.container():
+            st.markdown(
+                f'<div class="result-card">',
+                unsafe_allow_html=True
+            )
+            st.markdown(r[seccion])
+            st.markdown('</div>', unsafe_allow_html=True)
 
     # ── CHATBOT ──
     st.markdown("""
     <div style="
         background: linear-gradient(135deg, #0f2456, #1e3a8a);
         border-radius: 16px 16px 0 0;
-        padding: 1rem 1.4rem;
+        padding: 0.9rem 1.4rem;
         margin-top: 2rem;
         display: flex; align-items: center; gap: 0.8rem;
     ">
         <div style="
-            width:36px; height:36px;
+            width:34px; height:34px;
             background: linear-gradient(135deg,#c9962c,#e8b84b);
             border-radius:50%; display:flex; align-items:center;
-            justify-content:center; font-size:1rem; flex-shrink:0;
+            justify-content:center; font-size:0.95rem; flex-shrink:0;
         ">🛡️</div>
         <div>
-            <div style="color:white; font-weight:700; font-size:0.9rem;">Asistente WebShield</div>
-            <div style="color:#93c5fd; font-size:0.7rem;">Consulta dudas sobre el análisis</div>
+            <div style="color:white; font-weight:700; font-size:0.88rem;">Asistente WebShield</div>
+            <div style="color:#93c5fd; font-size:0.68rem;">Consulta dudas sobre el análisis</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -203,12 +196,10 @@ if "resultado_ia" in st.session_state:
     if "chat_messages" not in st.session_state:
         st.session_state.chat_messages = []
 
-    # Mensaje de bienvenida si no hay historial
     if not st.session_state.chat_messages:
         with st.chat_message("assistant", avatar="🛡️"):
-            st.markdown("Hola, soy el asistente de WebShield. Puedo responder tus dudas sobre el análisis de seguridad que acabas de realizar. ¿En qué te puedo ayudar?")
+            st.markdown("Hola, soy el asistente de WebShield. Puedo responder tus dudas sobre el análisis realizado. ¿En qué te puedo ayudar?")
 
-    # Mostrar historial
     for message in st.session_state.chat_messages:
         avatar = "🛡️" if message["role"] == "assistant" else "👤"
         with st.chat_message(message["role"], avatar=avatar):
@@ -219,15 +210,11 @@ if "resultado_ia" in st.session_state:
         with st.chat_message("user", avatar="👤"):
             st.markdown(user_question)
 
-        scan_ctx   = st.session_state.get("scan_json", {})
-        result_ctx = st.session_state.get("resultado_ia", {})
-        url_ctx    = st.session_state.get("url_analizada", "")
-
         contexto = f"""Eres un asistente experto en ciberseguridad. Responde ÚNICAMENTE basándote en el análisis proporcionado.
 Responde en español, de forma clara y concisa. No uses emojis.
-URL analizada: {url_ctx}
-Hallazgos: {scan_ctx}
-Análisis IA: {result_ctx}"""
+URL analizada: {st.session_state.get('url_analizada','')}
+Hallazgos: {st.session_state.get('scan_json',{})}
+Análisis IA: {st.session_state.get('resultado_ia',{})}"""
 
         with st.chat_message("assistant", avatar="🛡️"):
             placeholder = st.empty()
@@ -259,7 +246,6 @@ elif "scan_json" not in st.session_state:
     </div>
     """, unsafe_allow_html=True)
 
-# ── FOOTER ──
 st.markdown("""
 <div class="footer">
     WEBSHIELD AI · HERRAMIENTAS DE CIBERSEGURIDAD · UNIVERSIDAD IBEROAMERICANA LEÓN 2026
