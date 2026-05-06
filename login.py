@@ -1,6 +1,6 @@
 """
 login.py — Autenticacion segura | WebShield AI
-Imagen servida desde GitHub raw para Streamlit Cloud
+Layout: imagen izq fija | panel blanco der con todo el formulario
 """
 
 import bcrypt, hmac, hashlib, time, os
@@ -76,7 +76,6 @@ def verificar_credenciales(usuario, password):
 
 
 def mostrar_login():
-    # ── sesion activa ──
     token = st.session_state.get("session_token")
     if token:
         u = _validar_token(token)
@@ -86,116 +85,124 @@ def mostrar_login():
             return True
         del st.session_state["session_token"]
 
-    # ── CSS ──
-    st.markdown("""
+    st.markdown(f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 
-*, html, body {
+*, html, body {{
     font-family: "Inter", sans-serif !important;
     box-sizing: border-box;
-}
+    margin: 0; padding: 0;
+}}
 
-/* ── FONDO CON IMAGEN IBERO ── */
-[data-testid="stAppViewContainer"] {
-    background-image: url("https://raw.githubusercontent.com/LC-3957/AI_CyberSecurity/main/assets/images/ibero.jpeg") !important;
-    background-size: cover !important;
-    background-position: center right !important;
-    background-repeat: no-repeat !important;
-    background-attachment: fixed !important;
-    min-height: 100vh !important;
-}
-
-/* Ocultar chrome de streamlit */
+/* Ocultar chrome streamlit */
 [data-testid="stHeader"], [data-testid="stToolbar"],
-[data-testid="stDecoration"], #MainMenu, footer, header {
+[data-testid="stDecoration"], #MainMenu, footer, header {{
     visibility: hidden !important;
     height: 0 !important;
     display: none !important;
-}
-[data-testid="stMainBlockContainer"] {
-    padding-top: 2rem !important;
-}
+}}
 
-/* ── CARD FORMULARIO — azul marino como mockup ── */
-.login-card {
-    background: linear-gradient(160deg, #0d1f4e 0%, #162454 60%, #1a2d6b 100%);
-    border-radius: 20px;
-    padding: 2.5rem 2.2rem 2rem;
-    box-shadow: 0 30px 70px rgba(0,0,0,0.55);
-    max-width: 500px;
-    margin: 0 auto;
-    border: 1px solid rgba(255,255,255,0.08);
-}
+/* ── FONDO: imagen cubre toda la pantalla ── */
+[data-testid="stAppViewContainer"] {{
+    background:
+        url("{IBERO_URL}") left center / 50% auto no-repeat,
+        #f0f4f8;
+    background-attachment: fixed, fixed;
+    min-height: 100vh !important;
+}}
 
-.logo-shield { text-align:center; font-size:3rem; margin-bottom:0.3rem; }
+/* Capa oscura solo sobre la mitad izquierda */
+[data-testid="stAppViewContainer"]::before {{
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 50%; height: 100%;
+    background: linear-gradient(135deg, rgba(7,22,62,0.65) 0%, rgba(10,30,80,0.45) 100%);
+    z-index: 0;
+    pointer-events: none;
+}}
 
-.login-title {
-    font-size: 1.9rem;
-    font-weight: 800;
-    color: #ffffff;
-    text-align: center;
-    margin-bottom: 0.15rem;
-}
-.login-sub {
-    font-size: 0.87rem;
-    color: #94a3b8;
-    text-align: center;
-    margin-bottom: 1.5rem;
-}
+[data-testid="stMainBlockContainer"] {{
+    position: relative;
+    z-index: 10;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    max-width: 100% !important;
+}}
 
-/* Card acceso restringido — azul más oscuro dentro del card */
-.access-card {
-    background: rgba(7,22,62,0.6);
-    border: 1px solid rgba(255,255,255,0.1);
+/* ── PANEL DERECHO BLANCO ── */
+.right-panel {{
+    background: #f0f4f8;
+    min-height: 100vh;
+    padding: 2.5rem 3rem 5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}}
+
+/* Logo y titulo */
+.logo-shield {{ text-align:center; font-size:2.8rem; margin-bottom:0.35rem; }}
+.login-title {{
+    font-size: 1.85rem; font-weight: 800;
+    color: #0f2456; text-align: center; margin-bottom: 0.12rem;
+}}
+.login-sub {{
+    font-size: 0.88rem; color: #64748b;
+    text-align: center; margin-bottom: 1.6rem;
+}}
+
+/* Card azul acceso */
+.access-card {{
+    background: linear-gradient(135deg, #0f2456, #1e3a8a);
     border-radius: 14px;
     padding: 1rem 1.3rem;
-    margin-bottom: 1.8rem;
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-}
-.access-icon  { font-size:1.7rem; flex-shrink:0; }
-.access-title { color:white; font-weight:700; font-size:0.9rem; margin-bottom:0.12rem; }
-.access-sub   { color:#c9962c; font-size:0.74rem; font-weight:600; }
+    margin-bottom: 1.6rem;
+    display: flex; align-items: center; gap: 0.9rem;
+    width: 100%;
+}}
+.access-icon  {{ font-size:1.7rem; flex-shrink:0; }}
+.access-title {{ color:white; font-weight:700; font-size:0.9rem; margin-bottom:0.1rem; }}
+.access-sub   {{ color:#c9962c; font-size:0.74rem; font-weight:600; }}
 
-/* Labels — blancos sobre fondo azul */
-.stTextInput label {
+/* Labels */
+.stTextInput label {{
     font-size: 0.75rem !important;
     font-weight: 700 !important;
-    color: #ffffff !important;
+    color: #1e3a8a !important;
     letter-spacing: 0.12em !important;
     text-transform: uppercase !important;
-}
+}}
 
-/* Inputs — azul oscuro como en el mockup */
-.stTextInput > div > div > input {
-    background: rgba(255,255,255,0.07) !important;
-    border: 1.5px solid rgba(255,255,255,0.2) !important;
+/* Inputs */
+.stTextInput > div > div > input {{
+    background: white !important;
+    border: 1.5px solid #cbd5e1 !important;
     border-radius: 10px !important;
-    color: #ffffff !important;
+    color: #0f172a !important;
     font-size: 1rem !important;
     padding: 0.75rem 1rem !important;
-}
-.stTextInput > div > div > input::placeholder {
-    color: rgba(255,255,255,0.35) !important;
-}
-.stTextInput > div > div > input:focus {
-    border-color: rgba(201,150,44,0.7) !important;
-    box-shadow: 0 0 0 3px rgba(201,150,44,0.15) !important;
-    background: rgba(255,255,255,0.1) !important;
-}
+}}
+.stTextInput > div > div > input::placeholder {{
+    color: #94a3b8 !important;
+}}
+.stTextInput > div > div > input:focus {{
+    border-color: #1e3a8a !important;
+    box-shadow: 0 0 0 3px rgba(30,58,138,0.12) !important;
+    background: white !important;
+}}
 
-/* Ojo de contraseña */
-.stTextInput > div > div > div > button {
-    background: rgba(255,255,255,0.1) !important;
+/* Quitar borde del form */
+[data-testid="stForm"] {{
+    background: transparent !important;
     border: none !important;
-    color: white !important;
-    border-radius: 6px !important;
-}
+    padding: 0 !important;
+    box-shadow: none !important;
+}}
 
 /* Boton dorado */
-[data-testid="stFormSubmitButton"] > button {
+[data-testid="stFormSubmitButton"] > button {{
     background: linear-gradient(90deg, #b8860b, #d4a017, #e8b84b) !important;
     color: #0f172a !important;
     font-size: 0.95rem !important;
@@ -205,58 +212,61 @@ def mostrar_login():
     border: none !important;
     padding: 0.82rem !important;
     width: 100% !important;
-    margin-top: 0.5rem !important;
+    margin-top: 0.6rem !important;
     transition: all 0.2s !important;
-}
-[data-testid="stFormSubmitButton"] > button:hover {
+}}
+[data-testid="stFormSubmitButton"] > button:hover {{
     filter: brightness(1.1) !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 6px 20px rgba(184,134,11,0.5) !important;
-}
+    box-shadow: 0 6px 20px rgba(184,134,11,0.45) !important;
+}}
 
-/* Features — texto claro sobre azul */
-.features-row {
-    display: flex; gap:1.2rem; justify-content:center;
-    margin-top:1.4rem; padding-top:1.3rem;
-    border-top: 1px solid rgba(255,255,255,0.12);
-}
-.feat          { text-align:center; flex:1; }
-.feat-icon     { font-size:1.35rem; margin-bottom:0.2rem; }
-.feat-title    { font-size:0.7rem; font-weight:700; color:#c9962c; }
-.feat-desc     { font-size:0.62rem; color:#94a3b8; line-height:1.4; }
+/* Features */
+.features-row {{
+    display:flex; gap:1.2rem; justify-content:center;
+    margin-top:1.5rem; padding-top:1.4rem;
+    border-top: 1px solid #e2e8f0;
+    width: 100%;
+}}
+.feat       {{ text-align:center; flex:1; }}
+.feat-icon  {{ font-size:1.35rem; margin-bottom:0.2rem; }}
+.feat-title {{ font-size:0.7rem; font-weight:700; color:#1e3a8a; }}
+.feat-desc  {{ font-size:0.62rem; color:#64748b; line-height:1.4; }}
 
-/* Ibero badge fijo inf-izq */
-.ibero-badge {
-    position:fixed; bottom:2.5rem; left:2.5rem;
+/* Ibero badge fijo sobre la imagen */
+.ibero-badge {{
+    position:fixed; bottom:2.8rem; left:2rem;
     display:flex; align-items:center; gap:0.8rem;
-    z-index: 999;
-}
-.ibero-circle {
+    z-index: 20;
+}}
+.ibero-circle {{
     width:46px; height:46px;
     background: linear-gradient(135deg,#c9962c,#e8b84b);
     border-radius:50%;
     display:flex; align-items:center; justify-content:center;
     font-size:1.25rem;
-}
-.ibero-info  { color:white; }
-.ibero-name  {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}}
+.ibero-info {{ color:white; }}
+.ibero-name {{
     font-size:0.68rem; font-weight:800;
     letter-spacing:0.06em; text-transform:uppercase; line-height:1.35;
-}
+    text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+}}
 
 /* Footer */
-.login-footer {
+.login-footer {{
     position:fixed; bottom:0; left:0; right:0;
-    background: rgba(7,22,62,0.96);
+    background: #0f2456;
     color:#64748b; text-align:center;
     font-size:0.6rem; letter-spacing:0.1em;
     padding:0.5rem; text-transform:uppercase;
     z-index: 998;
-}
+}}
 </style>
 """, unsafe_allow_html=True)
 
-    # ── Badge Ibero + Footer ──
+    # Badge Ibero + Footer
     st.markdown("""
     <div class="ibero-badge">
         <div class="ibero-circle">🏛️</div>
@@ -269,10 +279,10 @@ def mostrar_login():
     </div>
     """, unsafe_allow_html=True)
 
-    # ── Columnas: espacio | card | espacio ──
-    _, col, _ = st.columns([1, 1.4, 1])
+    # Columnas: mitad izq vacía (imagen) | mitad der con formulario
+    _, col = st.columns([1, 1])
     with col:
-        st.markdown('<div class="login-card">', unsafe_allow_html=True)
+        st.markdown('<div class="right-panel">', unsafe_allow_html=True)
 
         st.markdown('<div class="logo-shield">🛡️</div>', unsafe_allow_html=True)
         st.markdown('<div class="login-title">WebShield AI</div>', unsafe_allow_html=True)
