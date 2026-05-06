@@ -14,7 +14,7 @@ USUARIOS = {
 }
 
 MAX_INTENTOS     = 3
-BLOQUEO_SEGUNDOS = 300
+BLOQUEO_SEGUNDOS = 120
 SESION_SEGUNDOS  = 7200
 
 try:
@@ -203,51 +203,21 @@ def mostrar_login():
     text-transform:uppercase !important;
 }}
 
-/* Inputs con icono simulado via padding-left */
+/* Inputs */
 .stTextInput > div > div > input {{
     background: rgba(255,255,255,0.06) !important;
     border: 1.5px solid rgba(255,255,255,0.15) !important;
     border-radius: 10px !important;
     color: #ffffff !important;
     font-size: 1rem !important;
-    padding: 0.75rem 1rem 0.75rem 2.8rem !important;
+    padding: 0.75rem 1rem !important;
     transition: all 0.25s ease !important;
 }}
-.stTextInput > div > div > input::placeholder {{ color:rgba(255,255,255,0.3) !important; }}
+.stTextInput > div > div > input::placeholder {{ color:rgba(255,255,255,0.4) !important; }}
 .stTextInput > div > div > input:focus {{
     border-color: rgba(99,179,237,0.9) !important;
     box-shadow: 0 0 0 3px rgba(99,179,237,0.2), 0 0 14px rgba(99,179,237,0.15) !important;
     background: rgba(255,255,255,0.09) !important;
-}}
-
-/* Icono usuario (primer input) */
-[data-testid="stForm"] .stTextInput:first-of-type > div {{
-    position: relative;
-}}
-[data-testid="stForm"] .stTextInput:first-of-type > div::before {{
-    content: "👤";
-    position: absolute;
-    left: 0.85rem;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1rem;
-    z-index: 10;
-    pointer-events: none;
-}}
-
-/* Icono candado (segundo input) */
-[data-testid="stForm"] .stTextInput:last-of-type > div {{
-    position: relative;
-}}
-[data-testid="stForm"] .stTextInput:last-of-type > div::before {{
-    content: "🔒";
-    position: absolute;
-    left: 0.85rem;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1rem;
-    z-index: 10;
-    pointer-events: none;
 }}
 
 .stTextInput > div > div > div > button {{
@@ -280,9 +250,9 @@ def mostrar_login():
     transform: translateY(0px) scale(0.99) !important;
 }}
 
-/* ── FEATURES — card celeste, hover, iconos grandes ── */
+/* ── FEATURES — card, hover, iconos grandes ── */
 .features-card {{
-    background: #425D78;
+    background: #EDF7FF;
     border-radius: 16px;
     padding: 1.6rem 1.5rem;
     margin-top: 1.2rem;
@@ -384,9 +354,9 @@ def mostrar_login():
                 st.stop()
 
         with st.form("login_form", clear_on_submit=False):
-            usuario_input  = st.text_input("USUARIO:", placeholder="tu usuario")
+            usuario_input  = st.text_input("USUARIO:", placeholder="👤  tu usuario")
             st.markdown("<div style='margin-top:0.4rem'></div>", unsafe_allow_html=True)
-            password_input = st.text_input("CONTRASEÑA:", type="password", placeholder="tu contraseña")
+            password_input = st.text_input("CONTRASEÑA:", type="password", placeholder="🔒  tu contraseña")
             st.markdown("<div style='margin-top:0.2rem'></div>", unsafe_allow_html=True)
             submit         = st.form_submit_button("INGRESAR →", use_container_width=True)
 
