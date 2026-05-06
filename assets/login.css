@@ -1,98 +1,176 @@
+/* ============================================================
+   login.css — WebShield AI Login Page
+   Proyecto Final: Herramientas de Ciberseguridad
+   Prof. Pablo Náchez | Universidad Iberoamericana León 2026
+   ============================================================ */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 
-/* Fondo general */
 html, body, [data-testid="stAppViewContainer"] {
-    background: linear-gradient(135deg, #eef2f7, #f8fafc);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', sans-serif !important;
 }
 
-/* Ocultar cosas de streamlit */
-#MainMenu, footer, header {
-    visibility: hidden;
+/* ── FONDO — foto Ibero con overlay ── */
+[data-testid="stAppViewContainer"] {
+    background:
+        linear-gradient(to right, rgba(7,22,62,0.85) 0%, rgba(7,22,62,0.4) 45%, transparent 60%),
+        url("images/ibero.jpeg") center/cover no-repeat !important;
 }
 
-/* Contenedor central tipo CARD */
-.login-container {
-    background: linear-gradient(145deg, #0f172a, #1e293b);
-    padding: 40px;
-    border-radius: 18px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-}
+[data-testid="stHeader"], [data-testid="stToolbar"],
+#MainMenu, footer, header { visibility: hidden; display: none; }
 
-/* Logo */
-.login-logo {
-    text-align: center;
-    font-size: 2.8rem;
-    margin-bottom: 0.5rem;
+/* ── PANEL IZQUIERDO (sobre la imagen) ── */
+.login-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2.5rem 3rem;
 }
-
-/* Título */
-.login-title {
-    text-align: center;
-    font-size: 1.9rem;
+.ibero-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.ibero-escudo {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, #c9962c, #e8b84b);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+.ibero-text { color: white; }
+.ibero-name {
+    font-size: 0.85rem;
     font-weight: 800;
-    color: #e2e8f0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1.2;
 }
 
-/* Subtítulo */
-.login-sub {
+/* ── LOGO Y TITULO ── */
+.login-logo {
+    font-size: 2.8rem;
     text-align: center;
-    font-size: 0.95rem;
-    color: #94a3b8;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.3rem;
 }
-
-/* Badge */
-.login-badge {
-    background: linear-gradient(90deg, #1e3a8a, #2563eb);
-    color: white;
-    padding: 12px;
-    border-radius: 10px;
-    font-size: 0.8rem;
+.login-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0f2456;
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.2rem;
+}
+.login-subtitle {
+    font-size: 0.9rem;
+    color: #475569;
+    text-align: center;
+    margin-bottom: 1.8rem;
 }
 
-/* Inputs */
+/* ── CARD AZUL ACCESO ── */
+.access-card {
+    background: linear-gradient(135deg, #0f2456, #1e3a8a);
+    border-radius: 14px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1.8rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.access-card-icon { font-size: 1.8rem; flex-shrink: 0; }
+.access-card-text { color: white; }
+.access-card-title { font-weight: 700; font-size: 0.95rem; }
+.access-card-sub {
+    font-size: 0.78rem;
+    color: #c9962c;
+    font-weight: 600;
+}
+
+/* ── LABELS ── */
 .stTextInput label {
-    font-size: 0.9rem !important;
-    font-weight: 600 !important;
-    color: #cbd5f5 !important;
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    color: #1e3a8a !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
 }
 
+/* ── INPUTS ── */
 .stTextInput input {
-    font-size: 0.95rem !important;
-    padding: 12px !important;
+    background: white !important;
+    border: 1.5px solid #cbd5e1 !important;
     border-radius: 10px !important;
-    border: 1px solid #334155 !important;
-    background: #020617 !important;
-    color: white !important;
+    color: #0f172a !important;
+    font-size: 1rem !important;
+    padding: 0.8rem 1rem !important;
 }
-
 .stTextInput input:focus {
-    border-color: #3b82f6 !important;
-    box-shadow: 0 0 0 2px rgba(59,130,246,0.3) !important;
+    border-color: #1e3a8a !important;
+    box-shadow: 0 0 0 3px rgba(30,58,138,0.12) !important;
+}
+.stTextInput input[type="password"] {
+    text-transform: none !important;
 }
 
-/* Botón */
+/* ── BOTON ── */
 [data-testid="stFormSubmitButton"] button {
-    background: linear-gradient(90deg, #8b5e3c, #c08a5b);
-    color: white;
-    font-weight: 700;
-    border-radius: 10px;
-    padding: 12px;
-    border: none;
+    background: linear-gradient(90deg, #c9962c, #e8b84b) !important;
+    color: #0f172a !important;
+    font-size: 1rem !important;
+    font-weight: 800 !important;
+    border-radius: 10px !important;
+    border: none !important;
+    padding: 0.85rem !important;
+    width: 100% !important;
+    letter-spacing: 0.05em !important;
+    margin-top: 0.5rem !important;
 }
-
 [data-testid="stFormSubmitButton"] button:hover {
-    transform: translateY(-1px);
-    opacity: 0.95;
+    opacity: 0.9 !important;
+    transform: translateY(-1px) !important;
 }
 
-/* Footer */
-.login-footer {
-    text-align: center;
+/* ── FEATURES ── */
+.features-row {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #cbd5e1;
+    width: 100%;
+}
+.feature-item { text-align: center; flex: 1; }
+.feature-icon { font-size: 1.5rem; margin-bottom: 0.3rem; }
+.feature-title {
     font-size: 0.75rem;
+    font-weight: 700;
+    color: #1e3a8a;
+}
+.feature-desc {
+    font-size: 0.65rem;
     color: #64748b;
-    margin-top: 1.2rem;
+    line-height: 1.4;
+}
+
+/* ── FOOTER BARRA ── */
+.login-footer-bar {
+    background: #0f2456;
+    color: #94a3b8;
+    text-align: center;
+    font-size: 0.65rem;
+    padding: 0.6rem;
+    letter-spacing: 0.08em;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
