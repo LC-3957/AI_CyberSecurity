@@ -162,128 +162,45 @@ if "resultado_ia" in st.session_state:
     st.markdown(f'<div class="result-card">{r["mitigaciones"]}</div>',      unsafe_allow_html=True)
     st.markdown(f'<div class="result-card">{r["resumen_ejecutivo"]}</div>', unsafe_allow_html=True)
 
-    # ── CHATBOT FLOTANTE ──
-    if "chat_messages" not in st.session_state:
-        st.session_state.chat_messages = [
-            {"role": "assistant", "content": "Hola, soy tu asistente de seguridad. Puedo responder preguntas sobre el análisis realizado. ¿En qué te ayudo?"}
-        ]
-
-    # Construir mensajes HTML
-    mensajes_html = ""
-    for m in st.session_state.chat_messages:
-        cls   = "chat-msg-bot" if m["role"] == "assistant" else "chat-msg-user"
-        texto = m["content"].replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>")
-        mensajes_html += f'<div class="{cls}">{texto}</div>\n'
-
-    st.markdown(f"""
-    <div id="chat-fab" onclick="document.getElementById('chat-win').style.display='flex'; this.style.display='none'">💬</div>
-
-    <div id="chat-win">
-        <div id="chat-header">
-            <div style="display:flex;align-items:center;gap:0.6rem">
-                <div id="chat-avatar">🛡️</div>
-                <div>
-                    <div style="font-weight:700;font-size:0.88rem">Asistente WebShield</div>
-                    <div style="font-size:0.68rem;color:#93c5fd">Consulta sobre el análisis</div>
-                </div>
-            </div>
-            <button onclick="document.getElementById('chat-win').style.display='none'; document.getElementById('chat-fab').style.display='flex'">✕</button>
+    # ── CHATBOT ──
+    st.markdown("""
+    <div style="
+        background: linear-gradient(135deg, #0f2456, #1e3a8a);
+        border-radius: 16px 16px 0 0;
+        padding: 1rem 1.4rem;
+        margin-top: 2rem;
+        display: flex; align-items: center; gap: 0.8rem;
+    ">
+        <div style="
+            width:36px; height:36px;
+            background: linear-gradient(135deg,#c9962c,#e8b84b);
+            border-radius:50%; display:flex; align-items:center;
+            justify-content:center; font-size:1rem; flex-shrink:0;
+        ">🛡️</div>
+        <div>
+            <div style="color:white; font-weight:700; font-size:0.9rem;">Asistente WebShield</div>
+            <div style="color:#93c5fd; font-size:0.7rem;">Consulta dudas sobre el análisis</div>
         </div>
-        <div id="chat-msgs">
-            {mensajes_html}
-        </div>
-        <div id="chat-hint">Escribe tu pregunta abajo y presiona Enter</div>
     </div>
-
-    <style>
-    #chat-fab {{
-        position:fixed; bottom:2rem; right:2rem;
-        width:54px; height:54px;
-        background:linear-gradient(135deg,#1e3a8a,#3b82f6);
-        border-radius:50%; display:flex; align-items:center; justify-content:center;
-        font-size:1.4rem; cursor:pointer; z-index:9999;
-        box-shadow:0 6px 20px rgba(30,58,138,0.5);
-        transition:transform 0.2s;
-    }}
-    #chat-fab:hover {{ transform:scale(1.1); }}
-
-    #chat-win {{
-        position:fixed; bottom:5.5rem; right:2rem;
-        width:340px; height:440px;
-        background:white; border-radius:18px;
-        box-shadow:0 20px 60px rgba(0,0,0,0.2);
-        z-index:9998; display:none; flex-direction:column;
-        border:1px solid #e2e8f0; overflow:hidden;
-    }}
-    #chat-header {{
-        background:linear-gradient(135deg,#0f2456,#1e3a8a);
-        padding:0.9rem 1.1rem; display:flex;
-        align-items:center; justify-content:space-between; color:white;
-        flex-shrink:0;
-    }}
-    #chat-header button {{
-        background:none; border:none; color:white;
-        font-size:1rem; cursor:pointer; opacity:0.7;
-    }}
-    #chat-header button:hover {{ opacity:1; }}
-    #chat-avatar {{
-        width:32px; height:32px;
-        background:linear-gradient(135deg,#c9962c,#e8b84b);
-        border-radius:50%; display:flex; align-items:center;
-        justify-content:center; font-size:0.9rem;
-    }}
-    #chat-msgs {{
-        flex:1; overflow-y:auto; padding:0.9rem;
-        display:flex; flex-direction:column; gap:0.6rem;
-        background:#f8fafc;
-    }}
-    .chat-msg-bot {{
-        background:white; border:1px solid #e2e8f0;
-        border-radius:12px 12px 12px 3px;
-        padding:0.6rem 0.85rem; font-size:0.8rem;
-        color:#0f172a; max-width:88%; align-self:flex-start;
-        box-shadow:0 2px 6px rgba(0,0,0,0.05); line-height:1.5;
-    }}
-    .chat-msg-user {{
-        background:linear-gradient(135deg,#1e3a8a,#3b82f6);
-        border-radius:12px 12px 3px 12px;
-        padding:0.6rem 0.85rem; font-size:0.8rem;
-        color:white; max-width:88%; align-self:flex-end; line-height:1.5;
-    }}
-    #chat-hint {{
-        text-align:center; font-size:0.68rem; color:#94a3b8;
-        padding:0.4rem; background:white; border-top:1px solid #f1f5f9;
-        flex-shrink:0;
-    }}
-    /* Ocultar expander viejo */
-    [data-testid="stExpander"] {{ display:none!important; }}
-    /* Input del chat — visible pero compacto */
-    .chat-input-area [data-testid="stChatInput"] {{
-        background: white !important;
-    }}
-    .chat-input-area [data-testid="stChatInput"] textarea {{
-        background: white !important;
-        color: #0f172a !important;
-        border: 2px solid #1e3a8a !important;
-        border-radius: 12px !important;
-        font-size: 0.85rem !important;
-    }}
-    </style>
-
-    <script>
-    // Auto-scroll al fondo
-    function scrollChat() {{
-        const el = document.getElementById('chat-msgs');
-        if (el) el.scrollTop = el.scrollHeight;
-    }}
-    setTimeout(scrollChat, 300);
-    </script>
     """, unsafe_allow_html=True)
 
-    # Input real de Streamlit — visible para que funcione
-    st.markdown('<div class="chat-input-area">', unsafe_allow_html=True)
-    if user_question := st.chat_input("Pregunta sobre el análisis..."):
+    if "chat_messages" not in st.session_state:
+        st.session_state.chat_messages = []
+
+    # Mensaje de bienvenida si no hay historial
+    if not st.session_state.chat_messages:
+        with st.chat_message("assistant"):
+            st.markdown("Hola, soy el asistente de WebShield. Puedo responder tus dudas sobre el análisis de seguridad que acabas de realizar. ¿En qué te puedo ayudar?")
+
+    # Mostrar historial
+    for message in st.session_state.chat_messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    if user_question := st.chat_input("Escribe tu pregunta sobre el análisis..."):
         st.session_state.chat_messages.append({"role": "user", "content": user_question})
+        with st.chat_message("user"):
+            st.markdown(user_question)
 
         scan_ctx   = st.session_state.get("scan_json", {})
         result_ctx = st.session_state.get("resultado_ia", {})
@@ -295,23 +212,26 @@ URL analizada: {url_ctx}
 Hallazgos: {scan_ctx}
 Análisis IA: {result_ctx}"""
 
-        try:
-            import anthropic
-            try:    api_key = st.secrets["ANTHROPIC_API_KEY"]
-            except: api_key = os.environ.get("ANTHROPIC_API_KEY")
-            client   = anthropic.Anthropic(api_key=api_key)
-            response = client.messages.create(
-                model="claude-sonnet-4-6", max_tokens=512,
-                system=contexto,
-                messages=[{"role": "user", "content": user_question}]
-            )
-            respuesta = response.content[0].text
-        except Exception as e:
-            respuesta = f"Error: {str(e)}"
-
-        st.session_state.chat_messages.append({"role": "assistant", "content": respuesta})
-        st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
+        with st.chat_message("assistant"):
+            placeholder = st.empty()
+            placeholder.markdown("Consultando el análisis...")
+            try:
+                import anthropic
+                try:    api_key = st.secrets["ANTHROPIC_API_KEY"]
+                except: api_key = os.environ.get("ANTHROPIC_API_KEY")
+                client   = anthropic.Anthropic(api_key=api_key)
+                response = client.messages.create(
+                    model="claude-sonnet-4-6", max_tokens=512,
+                    system=contexto,
+                    messages=[{"role": "user", "content": user_question}]
+                )
+                respuesta = response.content[0].text
+                placeholder.markdown(respuesta)
+                st.session_state.chat_messages.append({"role": "assistant", "content": respuesta})
+            except Exception as e:
+                error_msg = f"Error al consultar: {str(e)}"
+                placeholder.markdown(error_msg)
+                st.session_state.chat_messages.append({"role": "assistant", "content": error_msg})
 
 elif "scan_json" not in st.session_state:
     st.markdown("""
