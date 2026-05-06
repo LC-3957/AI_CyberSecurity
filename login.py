@@ -251,7 +251,7 @@ def mostrar_login():
         </div>
     </div>
     <div class="login-footer">
-        🛡️ &nbsp; WebShield AI &nbsp;·&nbsp; Herramientas de Ciberseguridad &nbsp;·&nbsp; 
+        🛡️ &nbsp; WebShield AI &nbsp;·&nbsp; Herramientas de Ciberseguridad &nbsp; 
     </div>
     """, unsafe_allow_html=True)
 
