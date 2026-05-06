@@ -261,6 +261,6 @@ elif "scan_json" not in st.session_state:
 # ───────── FOOTER ─────────
 st.markdown("""
 <div class="footer">
-    WEBSHIELD AI · HERRAMIENTAS DE CIBERSEGURIDAD · PROF. PABLO NACHEZ · UNIVERSIDAD IBEROAMERICANA LEON 2026
+    WEBSHIELD AI · HERRAMIENTAS DE CIBERSEGURIDAD · UNIVERSIDAD IBEROAMERICANA LEON 2026
 </div>
 """, unsafe_allow_html=True)

@@ -107,7 +107,7 @@ def mostrar_login():
 [data-testid="stVerticalBlock"] {{ gap: 0 !important; }}
 [data-testid="column"] {{ background: transparent !important; }}
 
-/* ── TITULO encima del card — sin fondo ── */
+/* ── TITULO encima del card ── */
 .login-header {{
     text-align: center;
     padding: 0 0 1.2rem 0;
@@ -126,19 +126,26 @@ def mostrar_login():
     text-shadow: 0 1px 2px rgba(255,255,255,0.5);
 }}
 
-/* ── CARD azul oscuro — solo acceso restringido + inputs ── */
+/* ── CARD azul oscuro — glass effect + profundidad ── */
 .login-card {{
     background: #0a1535;
     border-radius: 20px 20px 0 0;
     padding: 1.8rem 2.2rem 1.6rem;
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,0.1),
+        0 8px 32px rgba(0,0,0,0.5),
+        0 2px 8px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.1);
     width: 100%;
-    margin-top: 20px
+    margin-top: 20px;
 }}
 
 .access-card {{
     background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.12);
     border-radius: 14px; padding: 1rem 1.3rem; margin-bottom: 0.5rem;
     display:flex; align-items:center; gap:0.9rem;
 }}
@@ -146,14 +153,17 @@ def mostrar_login():
 .access-title {{ color:white; font-weight:700; font-size:0.9rem; margin-bottom:0.1rem; }}
 .access-sub   {{ color:#c9962c; font-size:0.74rem; font-weight:600; }}
 
-/* stForm — mismo azul oscuro, continua el card */
+/* stForm — mismo azul, continua el card */
 [data-testid="stForm"] {{
     background: #0a1535 !important;
-    border: 1px solid rgba(255,255,255,0.06) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
     border-top: none !important;
     border-radius: 0 0 20px 20px !important;
     padding: 0.5rem 2.2rem 2rem !important;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.55),
+        0 4px 16px rgba(0,0,0,0.3),
+        inset 0 -1px 0 rgba(255,255,255,0.05) !important;
     margin-top: -2px !important;
 }}
 
@@ -164,56 +174,112 @@ def mostrar_login():
     text-transform:uppercase !important;
 }}
 
-/* Inputs */
+/* Inputs con icono simulado via padding-left */
 .stTextInput > div > div > input {{
-    background: rgba(255,255,255,0.07) !important;
-    border: 1.5px solid rgba(255,255,255,0.18) !important;
+    background: rgba(255,255,255,0.06) !important;
+    border: 1.5px solid rgba(255,255,255,0.15) !important;
     border-radius: 10px !important;
     color: #ffffff !important;
     font-size: 1rem !important;
-    padding: 0.75rem 1rem !important;
+    padding: 0.75rem 1rem 0.75rem 2.8rem !important;
+    transition: all 0.25s ease !important;
 }}
-.stTextInput > div > div > input::placeholder {{ color:rgba(255,255,255,0.35) !important; }}
+.stTextInput > div > div > input::placeholder {{ color:rgba(255,255,255,0.3) !important; }}
 .stTextInput > div > div > input:focus {{
-    border-color: rgba(201,150,44,0.7) !important;
-    box-shadow: 0 0 0 3px rgba(201,150,44,0.15) !important;
-    background: rgba(255,255,255,0.1) !important;
+    border-color: rgba(99,179,237,0.9) !important;
+    box-shadow: 0 0 0 3px rgba(99,179,237,0.2), 0 0 14px rgba(99,179,237,0.15) !important;
+    background: rgba(255,255,255,0.09) !important;
 }}
+
+/* Icono usuario (primer input) */
+[data-testid="stForm"] .stTextInput:first-of-type > div {{
+    position: relative;
+}}
+[data-testid="stForm"] .stTextInput:first-of-type > div::before {{
+    content: "👤";
+    position: absolute;
+    left: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    z-index: 10;
+    pointer-events: none;
+}}
+
+/* Icono candado (segundo input) */
+[data-testid="stForm"] .stTextInput:last-of-type > div {{
+    position: relative;
+}}
+[data-testid="stForm"] .stTextInput:last-of-type > div::before {{
+    content: "🔒";
+    position: absolute;
+    left: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    z-index: 10;
+    pointer-events: none;
+}}
+
 .stTextInput > div > div > div > button {{
     background: rgba(255,255,255,0.1) !important;
     border: none !important; color: white !important; border-radius: 6px !important;
 }}
 
-/* Boton dorado */
+/* Boton dorado con glow y animacion elegante */
 [data-testid="stFormSubmitButton"] > button {{
-    background: linear-gradient(90deg, #b8860b, #d4a017, #e8b84b) !important;
-    color: #0f172a !important; font-size:0.95rem !important;
-    font-weight:800 !important; letter-spacing:0.12em !important;
-    border-radius:10px !important; border:none !important;
-    padding:0.82rem !important; width:100% !important;
-    margin-top:0.8rem !important; transition:all 0.2s !important;
+    background: linear-gradient(90deg, #a07010, #c9962c, #e8b84b, #c9962c, #a07010) !important;
+    background-size: 200% auto !important;
+    color: #0f172a !important;
+    font-size: 0.95rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.12em !important;
+    border-radius: 10px !important;
+    border: none !important;
+    padding: 0.82rem !important;
+    width: 100% !important;
+    margin-top: 0.8rem !important;
+    transition: background-position 0.4s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
+    box-shadow: 0 4px 15px rgba(184,134,11,0.3) !important;
 }}
 [data-testid="stFormSubmitButton"] > button:hover {{
-    filter:brightness(1.1) !important; transform:translateY(-1px) !important;
-    box-shadow:0 6px 20px rgba(184,134,11,0.45) !important;
+    background-position: right center !important;
+    transform: translateY(-2px) scale(1.01) !important;
+    box-shadow: 0 8px 25px rgba(184,134,11,0.55), 0 0 20px rgba(232,184,75,0.3) !important;
+}}
+[data-testid="stFormSubmitButton"] > button:active {{
+    transform: translateY(0px) scale(0.99) !important;
 }}
 
-/* ── FEATURES en card celeste ── */
+/* ── FEATURES — card celeste, hover, iconos grandes ── */
 .features-card {{
     background: #425D78;
     border-radius: 16px;
-    padding: 1.4rem 1.5rem;
+    padding: 1.6rem 1.5rem;
     margin-top: 1.2rem;
     box-shadow: 0 8px 25px rgba(0,0,0,0.25);
     border: 1px solid rgba(255,255,255,0.12);
 }}
 .features-row {{
-    display:flex; gap:1.2rem; justify-content:center;
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
 }}
-.feat       {{ text-align:center; flex:1; }}
-.feat-icon  {{ font-size:1.35rem; margin-bottom:0.2rem; }}
-.feat-title {{ font-size:0.7rem; font-weight:700; color:#e8b84b; }}
-.feat-desc  {{ font-size:0.62rem; color:#cbd5e1; line-height:1.4; }}
+.feat {{
+    text-align: center;
+    flex: 1;
+    padding: 0.8rem 0.5rem;
+    border-radius: 10px;
+    transition: background 0.2s ease, transform 0.2s ease;
+    cursor: default;
+}}
+.feat:hover {{
+    background: rgba(255,255,255,0.12);
+    transform: translateY(-2px);
+}}
+.feat-icon  {{ font-size: 1.8rem; margin-bottom: 0.4rem; }}
+.feat-title {{ font-size: 0.72rem; font-weight: 700; color: #0f2456; margin-bottom: 0.25rem; }}
+.feat-desc  {{ font-size: 0.62rem; color: #1a1a2e; line-height: 1.5; }}
 
 /* Badge Ibero */
 .ibero-badge {{
@@ -251,14 +317,13 @@ def mostrar_login():
         </div>
     </div>
     <div class="login-footer">
-        🛡️ &nbsp; WebShield AI &nbsp;·&nbsp; Herramientas de Ciberseguridad &nbsp; 
+        🛡️ &nbsp; WebShield AI &nbsp;·&nbsp; Herramientas de Ciberseguridad &nbsp;
     </div>
     """, unsafe_allow_html=True)
 
     _, col, margin = st.columns([1, 1.2, 0.15])
     with col:
 
-        # ── TITULO — fuera del card, sin fondo ──
         st.markdown("""
         <div class="login-header">
             <div class="login-header-shield">🛡️</div>
@@ -267,7 +332,6 @@ def mostrar_login():
         </div>
         """, unsafe_allow_html=True)
 
-        # ── CARD azul oscuro ──
         st.markdown("""
         <div class="login-card">
             <div class="access-card">
@@ -280,7 +344,6 @@ def mostrar_login():
         </div>
         """, unsafe_allow_html=True)
 
-        # ── FORM (continúa el card) ──
         with st.form("login_form", clear_on_submit=False):
             usuario_input  = st.text_input("USUARIO:", placeholder="tu usuario")
             st.markdown("<div style='margin-top:0.4rem'></div>", unsafe_allow_html=True)
@@ -311,7 +374,6 @@ def mostrar_login():
                     else:
                         st.error(f"Cuenta bloqueada por {BLOQUEO_SEGUNDOS // 60} minutos.")
 
-        # ── FEATURES en card celeste ──
         st.markdown("""
         <div class="features-card">
             <div class="features-row">
