@@ -13,28 +13,31 @@ from backend.main import (
 from login import mostrar_login, cerrar_sesion
 
 def _limpiar_md(texto):
-    # Quitar bloques de código
     texto = re.sub(r'```[\s\S]*?```', '', texto)
-    # Quitar encabezados #
     texto = re.sub(r'#{1,6}\s*', '', texto)
-    # Quitar negritas e itálicas
     texto = re.sub(r'\*{1,3}([^*\n]+)\*{1,3}', r'\1', texto)
-    # Quitar código inline
     texto = re.sub(r'`([^`\n]+)`', r'\1', texto)
-    # Quitar líneas horizontales ---
-    texto = re.sub(r'^-{3,}\s*$', '', texto, flags=re.MULTILINE)
-    # Quitar caracteres no-latin problemáticos para fpdf
-    texto = texto.encode('latin-1', errors='replace').decode('latin-1')
-    # Truncar líneas largas
-    lineas = []
+    texto = re.sub(r'^[-_]{3,}\s*$', '', texto, flags=re.MULTILINE)
+    # Acortar URLs largas
+    texto = re.sub(r'https?://\S+', lambda m: m.group(0)[:50]+'...' if len(m.group(0))>50 else m.group(0), texto)
+    # Reemplazar char a char los no-latin
+    safe = []
+    for ch in texto:
+        try:
+            ch.encode('latin-1')
+            safe.append(ch)
+        except Exception:
+            safe.append('?')
+    texto = ''.join(safe)
+    # Partir en trozos de 100 chars máximo (más conservador)
+    lineas_final = []
     for l in texto.split('\n'):
-        if len(l) > 180:
-            # Partir en trozos de 180
-            while len(l) > 180:
-                lineas.append(l[:180])
-                l = l[180:]
-        lineas.append(l)
-    return '\n'.join(lineas)
+        l = l.strip()
+        while len(l) > 100:
+            lineas_final.append(l[:100])
+            l = l[100:]
+        lineas_final.append(l)
+    return '\n'.join(lineas_final)
 
 def generar_pdf(r: dict, url: str) -> bytes:
     from fpdf import FPDF
@@ -77,7 +80,10 @@ def generar_pdf(r: dict, url: str) -> bytes:
             if not linea:
                 pdf.ln(2)
             else:
-                pdf.multi_cell(0, 5, linea)
+                try:
+                    pdf.multi_cell(0, 5, linea)
+                except Exception:
+                    pass  # Saltar línea problemática sin mostrar error
         pdf.ln(5)
 
     return bytes(pdf.output())

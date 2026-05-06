@@ -364,3 +364,36 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
 .input-label {
     color: #c9962c !important;
 }
+
+/* ── Texto barra de progreso visible ── */
+[data-testid="stProgress"] p,
+[data-testid="stProgress"] span,
+[data-testid="stStatusWidget"] p,
+[data-testid="stStatusWidget"] span {
+    color: #0f172a !important;
+    background: transparent !important;
+}
+
+/* Texto del st.info visible */
+[data-testid="stAlert"] p,
+[data-testid="stAlert"] span {
+    color: #0f172a !important;
+}
+
+/* ── Texto de la barra de progreso — visible ── */
+[data-testid="stProgress"] p,
+[data-testid="stProgress"] span,
+[data-testid="stProgress"] div,
+[data-testid="stStatusWidget"] p,
+[data-testid="stStatusWidget"] span {
+    color: #1e3a8a !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+}
+
+/* Texto del st.info (mensaje "Analizando...") */
+[data-testid="stAlert"] p,
+[data-testid="stAlert"] span,
+[data-testid="stAlertContainer"] p {
+    color: #1e3a8a !important;
+}
