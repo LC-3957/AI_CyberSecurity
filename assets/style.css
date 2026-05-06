@@ -1,193 +1,244 @@
-/* ───────── FONDO GLOBAL ───────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ── RESET Y BASE ── */
+* { font-family: 'Inter', sans-serif !important; box-sizing: border-box; }
+
 .stApp {
-    background: linear-gradient(135deg, #e6eef8, #f8fbff);
-    font-family: 'Inter', sans-serif;
+    background: #e8eef7 !important;
 }
 
-/* ───────── CONTENEDOR GENERAL ───────── */
-.main {
-    background: transparent !important;
+/* Ocultar barra superior de streamlit */
+[data-testid="stHeader"] { background: transparent !important; }
+[data-testid="stDecoration"] { display: none !important; }
+#MainMenu { visibility: hidden !important; }
+footer { visibility: hidden !important; }
+
+/* ── TOPBAR — barra azul oscura arriba ── */
+[data-testid="stHeader"] {
+    background: #0f1f3d !important;
+    visibility: visible !important;
+    height: 56px !important;
 }
 
-/* RESULT CARDS  */
-.result-card {
-    color: #0f172a !important;
-}
-
-/* EXPANDER (hallazgos técnicos) */
-details, summary {
-    color: #0f172a !important;
-}
-
-/* INPUT LABELS */
-label {
-    color: #1e3a8a !important;
-}
-
-/* ───────── NAV / BRAND CARD (ARRIBA IZQ) ───────── */
-.hero-wrapper {
+/* Forzar topbar custom */
+.topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: #0f1f3d;
     display: flex;
-    justify-content: flex-start;
-    padding-top: 20px;
+    align-items: center;
+    padding: 0 2rem;
+    z-index: 1000;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
 }
-
-.hero-wrapper::before {
-    content: "🔐  WebShield AI";
-    display: inline-block;
-    background: #849bb8;
-    color: #091947;
-    padding: 14px 22px;
-    border-radius: 14px;
+.topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    font-size: 18px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    color: white;
+}
+.topbar-brand-icon {
+    font-size: 1.3rem;
+}
+.topbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+.topbar-avatar {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #c9962c, #e8b84b);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: #0f172a;
+    cursor: pointer;
+}
+.topbar-salir {
+    color: #94a3b8;
+    font-size: 0.8rem;
+    cursor: pointer;
 }
 
-/* ocultamos el título grande original */
-.hero-title {
-    display: none;
+/* Empujar contenido debajo del topbar */
+.block-container {
+    padding-top: 4.5rem !important;
+    max-width: 900px !important;
+    margin: 0 auto !important;
 }
 
-.hero-sub, .hero-divider, .hero-eyebrow {
-    display: none;
+/* ── AVISO ETICO ── */
+.etica-box {
+    background: linear-gradient(90deg, #07163e, #203054, #394d77);
+    color: white;
+    padding: 14px 20px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    box-shadow: 0 4px 15px rgba(7,22,62,0.3);
+}
+.etica-box span {
+    font-weight: 700;
+    color: #e8b84b;
+    letter-spacing: 0.05em;
 }
 
-/* ───────── TITULO CENTRAL NUEVO ───────── */
+/* ── BIENVENIDA + SALIR ── */
+.usuario-bar {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    color: #0f2456 !important;
+    padding: 4px 0 !important;
+}
+
+/* Botón salir */
+[data-testid="stButton"] button[kind="secondary"] {
+    background: linear-gradient(135deg, #c9962c, #e8b84b) !important;
+    color: #0f172a !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    padding: 0.5rem 1.2rem !important;
+    box-shadow: 0 4px 12px rgba(201,150,44,0.3) !important;
+    transition: all 0.2s !important;
+}
+[data-testid="stButton"] button[kind="secondary"]:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 18px rgba(201,150,44,0.45) !important;
+}
+
+/* ── HERO — escudo + títulos centrales ── */
+.hero-wrapper { display: none; }
+
 .section-title-main {
     text-align: center;
-    font-size: 34px;
-    font-weight: 700;
-    color: #1e3a8a;
-    margin-top: 30px;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0f2456;
+    margin-top: 1rem;
+    margin-bottom: 0.3rem;
+    line-height: 1.2;
 }
-
 .section-sub-main {
     text-align: center;
-    color: #314259;
-    margin-bottom: 30px;
+    color: #475569;
+    font-size: 0.92rem;
+    margin-bottom: 1.8rem;
+    line-height: 1.6;
 }
 
-/* ───────── CARD AVISO ETICO ───────── */
-.etica-box {
-    background: linear-gradient(90deg, #07163e, #203054,#394d77 );
-    color: white;
-    padding: 25px 22px;
-    border-radius: 16px;
-    margin-bottom: 25px;
-    box-shadow: 0 10px 25px rgba(37,99,235,0.25);
-    font-size: 14px;
-}
-
-/* ───────── CARD INPUT ───────── */
-.input-card {
-    background: white;
-    padding: 25px;
-    border-radius: 18px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
-    border: 1px solid #e2e8f0;
-}
-
-/* ───────── LABEL ───────── */
+/* ── INPUT CARD — caja azul oscura con URL ── */
 .input-label {
-    font-size: 14px;
-    color: #2563eb;
-    font-weight: 600;
-    margin-bottom: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #c9962c;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-/* ───────── INPUT ───────── */
+/* Wrapper de la card azul que envuelve input + botón */
 .stTextInput input {
-    background: #0f172a !important;
+    background: #0f1f3d !important;
     color: #e2e8f0 !important;
     border-radius: 12px !important;
-    border: 2px solid #1e3a8a !important;
-    padding: 12px !important;
-    font-size: 14px;
+    border: 1.5px solid #1e3a8a !important;
+    padding: 14px 16px !important;
+    font-size: 0.95rem !important;
+    transition: all 0.2s !important;
 }
-
+.stTextInput input::placeholder { color: #64748b !important; }
 .stTextInput input:focus {
-    border: 2px solid #3b82f6 !important;
-    box-shadow: 0 0 10px rgba(59,130,246,0.4);
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.2) !important;
+}
+.stTextInput label { display: none !important; }
+
+/* Botón ANALIZAR */
+[data-testid="stButton"] button[kind="primary"] {
+    background: linear-gradient(90deg, #b8860b, #d4a017, #e8b84b) !important;
+    color: #0f172a !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+    font-size: 0.9rem !important;
+    letter-spacing: 0.06em !important;
+    height: 52px !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 0 4px 15px rgba(184,134,11,0.3) !important;
+}
+[data-testid="stButton"] button[kind="primary"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(184,134,11,0.5) !important;
+    filter: brightness(1.05) !important;
 }
 
-/* ───────── BOTON ───────── */
-.stButton button {
-    background: linear-gradient(90deg, #9e0e0e, #ef4444,#f97316);
-    color: white;
-    border-radius: 12px;
-    font-weight: 600;
-    border: none;
-    height: 45px;
-    transition: all 0.25s ease;
+/* ── RESULT CARDS ── */
+.result-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem 1.8rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #e2e8f0;
+    color: #0f172a !important;
+    line-height: 1.7;
+}
+.result-card h3, .result-card h4 {
+    color: #0f2456 !important;
+    font-weight: 700;
+}
+.result-card p, .result-card li, .result-card span {
+    color: #0f172a !important;
 }
 
-.stButton button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 25px rgba(239,68,68,0.35);
+/* ── EXPANDER hallazgos ── */
+details {
+    background: white !important;
+    border-radius: 14px !important;
+    border: 1px solid #e2e8f0 !important;
+    margin-bottom: 0.8rem !important;
+    overflow: hidden !important;
+}
+summary {
+    color: #0f2456 !important;
+    font-weight: 600 !important;
+    padding: 1rem 1.4rem !important;
+    cursor: pointer !important;
+}
+details[open] summary {
+    border-bottom: 1px solid #e2e8f0;
 }
 
-/* ───────── FEATURES (OPCIONAL SI LOS AGREGAS) ───────── */
-.features-row {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 25px;
-}
-
-.feature-item {
-    text-align: center;
-    flex: 1;
-    color: #1e293b;
-}
-
-.feature-icon {
-    font-size: 28px;
-    margin-bottom: 8px;
-}
-
-/* ───────── EMPTY STATE ───────── */
-.empty-state {
-    text-align: center;
-    padding: 80px;
-    color: #64748b;
-}
-
-.empty-state-icon {
-    font-size: 40px;
-    margin-bottom: 10px;
-}
-
-/* ───────── FOOTER ───────── */
-.footer {
-    text-align: center;
-    font-size: 12px;
-    color: #94a3b8;
-    margin-top: 50px;
-}
-
-/* ───────── CHATBOT ───────── */
-
-/* Fondo del mensaje del asistente */
+/* ── CHATBOT ── */
 [data-testid="stChatMessageContent"] {
     background: white !important;
     border-radius: 12px !important;
     padding: 12px 16px !important;
+    color: #0f172a !important;
 }
-
-/* Texto de todos los mensajes */
 [data-testid="stChatMessageContent"] p,
 [data-testid="stChatMessageContent"] li,
 [data-testid="stChatMessageContent"] span,
-[data-testid="stChatMessageContent"] strong {
+[data-testid="stChatMessageContent"] strong,
+[data-testid="stChatMessageContent"] em,
+[data-testid="stChatMessageContent"] code {
     color: #0f172a !important;
 }
-
-/* Fondo del mensaje del usuario */
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) 
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"])
 [data-testid="stChatMessageContent"] {
     background: #e8f0fe !important;
 }
-
-/* Input del chat */
 [data-testid="stChatInput"] textarea {
     background: white !important;
     color: #0f172a !important;
@@ -195,7 +246,49 @@ label {
     border-radius: 12px !important;
 }
 
-/* Título del chatbot */
-.element-container h3 {
-    color: #1e3a8a !important;
+/* ── EMPTY STATE ── */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #94a3b8;
+}
+.empty-state-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.empty-state-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #94a3b8;
+}
+
+/* ── PROGRESS BAR ── */
+[data-testid="stProgress"] > div > div {
+    background: linear-gradient(90deg, #1e3a8a, #3b82f6) !important;
+    border-radius: 10px !important;
+}
+[data-testid="stProgress"] {
+    background: #e2e8f0 !important;
+    border-radius: 10px !important;
+}
+
+/* ── FOOTER ── */
+.footer {
+    text-align: center;
+    font-size: 0.7rem;
+    color: #94a3b8;
+    margin-top: 3rem;
+    padding-bottom: 2rem;
+    letter-spacing: 0.08em;
+}
+
+/* ── EXPANDER del chatbot ── */
+[data-testid="stExpander"] {
+    background: white !important;
+    border-radius: 16px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important;
+}
+[data-testid="stExpander"] summary {
+    color: #0f2456 !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
 }
