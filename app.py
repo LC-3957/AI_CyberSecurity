@@ -161,15 +161,26 @@ if "resultado_ia" in st.session_state:
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Resultados con st.markdown nativo (renderiza Markdown correctamente)
-    for seccion in ["resumen", "riesgos", "impacto", "mitigaciones", "resumen_ejecutivo"]:
-        with st.container():
-            st.markdown(
-                f'<div class="result-card">',
-                unsafe_allow_html=True
-            )
-            st.markdown(r[seccion])
-            st.markdown('</div>', unsafe_allow_html=True)
+    # Resultados con st.markdown nativo dentro de containers con fondo
+    secciones = [
+        ("resumen", "Resumen de Hallazgos"),
+        ("riesgos", "Clasificacion de Riesgos"),
+        ("impacto", "Impacto Potencial"),
+        ("mitigaciones", "Mitigaciones Recomendadas"),
+        ("resumen_ejecutivo", "Resumen Ejecutivo"),
+    ]
+    for key, titulo in secciones:
+        st.markdown(f"""
+        <div style="
+            background: whitesmoke;
+            border-radius: 16px;
+            padding: 0.6rem 1.4rem 0.2rem;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid #edf5ff;
+        "></div>
+        """, unsafe_allow_html=True)
+        st.markdown(r[key])
 
     # ── CHATBOT ──
     st.markdown("""
