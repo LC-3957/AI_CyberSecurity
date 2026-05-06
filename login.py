@@ -268,9 +268,6 @@ def mostrar_login():
                     <div class="access-sub">Universidad Iberoamericana León &nbsp;·&nbsp; 2026</div>
                 </div>
             </div>
-            <div class="form-labels-inside">
-                <div class="field-label">USUARIO</div>
-            </div>
         </div>
         """, unsafe_allow_html=True)
 
