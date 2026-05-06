@@ -157,6 +157,14 @@ if analizar:
 if "resultado_ia" in st.session_state:
     r = st.session_state["resultado_ia"]
 
+    # Botón limpiar análisis
+    col_res, col_clear = st.columns([6, 1])
+    with col_clear:
+        if st.button("Nueva consulta", type="secondary", use_container_width=True):
+            for k in ["scan_json", "resultado_ia", "url_analizada", "chat_messages"]:
+                st.session_state.pop(k, None)
+            st.rerun()
+
     st.markdown(f'<div class="result-card">{r["resumen"]}</div>',           unsafe_allow_html=True)
     st.markdown(f'<div class="result-card">{r["riesgos"]}</div>',           unsafe_allow_html=True)
     st.markdown(f'<div class="result-card">{r["impacto"]}</div>',           unsafe_allow_html=True)
