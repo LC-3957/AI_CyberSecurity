@@ -61,6 +61,7 @@ with col_b:
 
 # ── HERO ──
 st.markdown("""
+<div class="main-content-wrapper">
 <div style="text-align:center; margin: 1.5rem 0 0.5rem;">
     <div style="
         width: 80px; height: 80px;
@@ -217,6 +218,7 @@ elif "scan_json" not in st.session_state:
     <div class="empty-state">
         <div class="empty-state-icon">🛡️</div>
         <div class="empty-state-text">Ingresa una URL para comenzar</div>
+    </div>
     </div>
     """, unsafe_allow_html=True)
 

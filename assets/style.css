@@ -68,8 +68,16 @@ footer { visibility: hidden !important; }
 /* Empujar contenido debajo del topbar */
 .block-container {
     padding-top: 4.5rem !important;
-    max-width: 900px !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+    max-width: 100% !important;
     margin: 0 auto !important;
+}
+
+/* Centrar solo el contenido principal (hero + input + resultados) */
+.main-content-wrapper {
+    max-width: 860px;
+    margin: 0 auto;
 }
 
 /* ── AVISO ETICO ── */
