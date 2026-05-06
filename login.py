@@ -243,13 +243,13 @@ def mostrar_login():
     # Badge + Footer
     st.markdown("""
     <div class="ibero-badge">
-        <div class="ibero-circle">🏛️</div>
+        <div class="ibero-circle"></div>
         <div class="ibero-info">
             <div class="ibero-name">Universidad<br>Iberoamericana<br>León</div>
         </div>
     </div>
     <div class="login-footer">
-        🛡️ &nbsp; WebShield AI &nbsp;·&nbsp; Herramientas de Ciberseguridad &nbsp;·&nbsp; Prof. Pablo Náchez
+        🛡️ &nbsp; WebShield AI &nbsp;·&nbsp; Herramientas de Ciberseguridad &nbsp;·&nbsp; 
     </div>
     """, unsafe_allow_html=True)
 
@@ -269,7 +269,7 @@ def mostrar_login():
                 </div>
             </div>
             <div class="form-labels-inside">
-                <div class="field-label">USUARIO</div>
+                <div class="field-label"></div>
             </div>
         </div>
         """, unsafe_allow_html=True)
