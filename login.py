@@ -246,7 +246,6 @@ def mostrar_login():
     # Badge + Footer
     st.markdown("""
     <div class="ibero-badge">
-        <div class="ibero-circle"></div>
         <div class="ibero-info">
             <div class="ibero-name">Universidad<br>Iberoamericana<br>León</div>
         </div>
