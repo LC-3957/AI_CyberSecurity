@@ -133,6 +133,7 @@ def mostrar_login():
     padding: 1.8rem 2.2rem 1.6rem;
     box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
     width: 100%;
+    margin-top: 20px
 }}
 
 .access-card {{
@@ -199,7 +200,7 @@ def mostrar_login():
 
 /* ── FEATURES en card celeste ── */
 .features-card {{
-    background: linear-gradient(135deg, #1a4a7a, #1e5a9a);
+    background: #7CB3DE;
     border-radius: 16px;
     padding: 1.4rem 1.5rem;
     margin-top: 1.2rem;
