@@ -124,14 +124,15 @@ def mostrar_login():
     padding-top: 2rem !important;
 }
 
-/* ── CARD FORMULARIO ── */
+/* ── CARD FORMULARIO — azul marino como mockup ── */
 .login-card {
-    background: rgba(255,255,255,0.97);
+    background: linear-gradient(160deg, #0d1f4e 0%, #162454 60%, #1a2d6b 100%);
     border-radius: 20px;
     padding: 2.5rem 2.2rem 2rem;
-    box-shadow: 0 30px 70px rgba(0,0,0,0.45);
-    max-width: 460px;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.55);
+    max-width: 500px;
     margin: 0 auto;
+    border: 1px solid rgba(255,255,255,0.08);
 }
 
 .logo-shield { text-align:center; font-size:3rem; margin-bottom:0.3rem; }
@@ -139,23 +140,24 @@ def mostrar_login():
 .login-title {
     font-size: 1.9rem;
     font-weight: 800;
-    color: #0f2456;
+    color: #ffffff;
     text-align: center;
     margin-bottom: 0.15rem;
 }
 .login-sub {
     font-size: 0.87rem;
-    color: #64748b;
+    color: #94a3b8;
     text-align: center;
     margin-bottom: 1.5rem;
 }
 
-/* Card azul acceso */
+/* Card acceso restringido — azul más oscuro dentro del card */
 .access-card {
-    background: linear-gradient(135deg, #0f2456, #1e3a8a);
+    background: rgba(7,22,62,0.6);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: 14px;
     padding: 1rem 1.3rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.8rem;
     display: flex;
     align-items: center;
     gap: 0.9rem;
@@ -164,28 +166,39 @@ def mostrar_login():
 .access-title { color:white; font-weight:700; font-size:0.9rem; margin-bottom:0.12rem; }
 .access-sub   { color:#c9962c; font-size:0.74rem; font-weight:600; }
 
-/* Labels */
+/* Labels — blancos sobre fondo azul */
 .stTextInput label {
     font-size: 0.75rem !important;
     font-weight: 700 !important;
-    color: #1e3a8a !important;
-    letter-spacing: 0.1em !important;
+    color: #ffffff !important;
+    letter-spacing: 0.12em !important;
     text-transform: uppercase !important;
 }
 
-/* Inputs */
+/* Inputs — azul oscuro como en el mockup */
 .stTextInput > div > div > input {
-    background: #f8fafc !important;
-    border: 1.5px solid #cbd5e1 !important;
+    background: rgba(255,255,255,0.07) !important;
+    border: 1.5px solid rgba(255,255,255,0.2) !important;
     border-radius: 10px !important;
-    color: #0f172a !important;
+    color: #ffffff !important;
     font-size: 1rem !important;
-    padding: 0.7rem 1rem !important;
+    padding: 0.75rem 1rem !important;
+}
+.stTextInput > div > div > input::placeholder {
+    color: rgba(255,255,255,0.35) !important;
 }
 .stTextInput > div > div > input:focus {
-    border-color: #1e3a8a !important;
-    box-shadow: 0 0 0 3px rgba(30,58,138,0.15) !important;
-    background: white !important;
+    border-color: rgba(201,150,44,0.7) !important;
+    box-shadow: 0 0 0 3px rgba(201,150,44,0.15) !important;
+    background: rgba(255,255,255,0.1) !important;
+}
+
+/* Ojo de contraseña */
+.stTextInput > div > div > div > button {
+    background: rgba(255,255,255,0.1) !important;
+    border: none !important;
+    color: white !important;
+    border-radius: 6px !important;
 }
 
 /* Boton dorado */
@@ -197,7 +210,7 @@ def mostrar_login():
     letter-spacing: 0.12em !important;
     border-radius: 10px !important;
     border: none !important;
-    padding: 0.78rem !important;
+    padding: 0.82rem !important;
     width: 100% !important;
     margin-top: 0.5rem !important;
     transition: all 0.2s !important;
@@ -205,19 +218,19 @@ def mostrar_login():
 [data-testid="stFormSubmitButton"] > button:hover {
     filter: brightness(1.1) !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 6px 20px rgba(184,134,11,0.45) !important;
+    box-shadow: 0 6px 20px rgba(184,134,11,0.5) !important;
 }
 
-/* Features */
+/* Features — texto claro sobre azul */
 .features-row {
     display: flex; gap:1.2rem; justify-content:center;
     margin-top:1.4rem; padding-top:1.3rem;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid rgba(255,255,255,0.12);
 }
 .feat          { text-align:center; flex:1; }
 .feat-icon     { font-size:1.35rem; margin-bottom:0.2rem; }
-.feat-title    { font-size:0.7rem; font-weight:700; color:#1e3a8a; }
-.feat-desc     { font-size:0.62rem; color:#64748b; line-height:1.4; }
+.feat-title    { font-size:0.7rem; font-weight:700; color:#c9962c; }
+.feat-desc     { font-size:0.62rem; color:#94a3b8; line-height:1.4; }
 
 /* Ibero badge fijo inf-izq */
 .ibero-badge {
@@ -259,7 +272,7 @@ def mostrar_login():
         </div>
     </div>
     <div class="login-footer">
-        🛡️ &nbsp; WebShield AI &nbsp;·&nbsp; Herramientas de Ciberseguridad &nbsp;·&nbsp; 
+        🛡️ &nbsp; WebShield AI &nbsp;·&nbsp; Herramientas de Ciberseguridad &nbsp;·&nbsp; Prof. Pablo Náchez
     </div>
     """, unsafe_allow_html=True)
 
