@@ -114,6 +114,15 @@ def mostrar_login():
     background: transparent !important;
 }}
 
+/* Quitar borde/fondo del stForm — es la card fantasma */
+[data-testid="stForm"] {{
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}}
+
 /* ── CARD del formulario ── */
 .login-card {{
     background: rgba(240, 244, 248, 0.97);
@@ -165,11 +174,7 @@ def mostrar_login():
     box-shadow: 0 0 0 3px rgba(30,58,138,0.12) !important;
 }}
 
-/* Quitar borde del form */
-[data-testid="stForm"] {{
-    background: transparent !important;
-    border: none !important; padding: 0 !important; box-shadow: none !important;
-}}
+
 
 /* Boton dorado */
 [data-testid="stFormSubmitButton"] > button {{
@@ -239,7 +244,7 @@ def mostrar_login():
     """, unsafe_allow_html=True)
 
     # Columna izq vacía | Columna der con card del formulario
-    _, col = st.columns([1, 1])
+    _, col, margin = st.columns([1, 1.2, 0.15])
     with col:
         st.markdown('<div class="login-card">', unsafe_allow_html=True)
 
