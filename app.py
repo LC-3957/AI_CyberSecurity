@@ -54,7 +54,7 @@ def generar_pdf(r: dict, url: str) -> bytes:
     url_corta = (url[:80] + '...') if len(url) > 80 else url
     url_corta = url_corta.encode('latin-1', errors='replace').decode('latin-1')
     pdf.cell(0, 5, f"URL: {url_corta}", ln=True)
-    pdf.cell(0, 5, "Universidad Iberoamericana Leon 2026 | Prof. Pablo Nachez", ln=True)
+    pdf.cell(0, 5, "Universidad Iberoamericana Leon 2026 ", ln=True)
     pdf.ln(6)
 
     secciones = [
