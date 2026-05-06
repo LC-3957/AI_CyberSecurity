@@ -222,7 +222,28 @@ button[kind="secondary"]:hover {
     display: none;
 }
 
-/* ── Código inline — quitar fondo negro tipo tooltip ── */
+/* ── CÓDIGO: bloques pre/code ── */
+[data-testid="stMarkdownContainer"] pre {
+    background: #1e2d3d !important;
+    border-radius: 10px !important;
+    padding: 1rem 1.2rem !important;
+    font-size: 0.82rem !important;
+    line-height: 1.6 !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+}
+[data-testid="stMarkdownContainer"] pre code,
+[data-testid="stMarkdownContainer"] pre * {
+    background: transparent !important;
+    color: #e2e8f0 !important;
+    font-size: 0.82rem !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+/* ── CÓDIGO inline (dentro de párrafo) ── */
 [data-testid="stMarkdownContainer"] p code,
 [data-testid="stMarkdownContainer"] li code {
     background: #e8eef7 !important;
@@ -233,27 +254,6 @@ button[kind="secondary"]:hover {
     border: 1px solid #c7d7f0 !important;
     font-family: monospace !important;
     box-shadow: none !important;
-}
-
-/* ── BLOQUES DE CÓDIGO ── */
-.result-card pre,
-.result-card code,
-[data-testid="stMarkdownContainer"] pre,
-[data-testid="stMarkdownContainer"] code {
-    background: #111a24 !important;
-    color: #e2e8f0 !important;
-    border-radius: 10px !important;
-    padding: 1rem 1.2rem !important;
-    font-size: 0.8rem !important;
-    line-height: 1.6 !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    overflow-x: auto !important;
-}
-[data-testid="stMarkdownContainer"] pre code {
-    background: transparent !important;
-    padding: 0 !important;
-    border: none !important;
-    color: #e2e8f0 !important;
 }
 
 /* ── EXPANDER ── */
@@ -434,19 +434,4 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
 [data-testid="stDownloadButton"] {
     margin-top: 0 !important;
     padding-top: 0 !important;
-}
-
-/* ── Bloques de código — texto visible ── */
-[data-testid="stMarkdownContainer"] pre code,
-[data-testid="stMarkdownContainer"] pre {
-    background: #e8e8e8 !important;
-    color: #e5ebf4 !important;
-    border-color: #091020;
-    border-radius: 10px !important;
-    padding: 1rem 1.2rem !important;
-    font-size: 0.82rem !important;
-    line-height: 1.6 !important;
-    display: block !important;
-    white-space: pre-wrap !important;
-    word-break: break-word !important;
 }
