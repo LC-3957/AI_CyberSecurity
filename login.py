@@ -280,9 +280,9 @@ def mostrar_login():
     transform: translateY(0px) scale(0.99) !important;
 }}
 
-/* ── FEATURES — card , hover, iconos grandes ── */
+/* ── FEATURES — card celeste, hover, iconos grandes ── */
 .features-card {{
-    background: #E5EFFF;
+    background: #425D78;
     border-radius: 16px;
     padding: 1.6rem 1.5rem;
     margin-top: 1.2rem;
@@ -373,6 +373,16 @@ def mostrar_login():
         </div>
         """, unsafe_allow_html=True)
 
+        # ── Verificar bloqueo activo AL CARGAR la pagina ──
+        usuario_guardado = st.session_state.get("ultimo_usuario", "")
+        if usuario_guardado:
+            bloq, rest = _bloqueado(usuario_guardado)
+            if bloq:
+                m, s = rest // 60, rest % 60
+                st.error(f"Cuenta bloqueada. Espera {m}m {s}s antes de intentar de nuevo.")
+                st.info("Recarga la pagina para actualizar el tiempo restante.")
+                st.stop()
+
         with st.form("login_form", clear_on_submit=False):
             usuario_input  = st.text_input("USUARIO:", placeholder="tu usuario")
             st.markdown("<div style='margin-top:0.4rem'></div>", unsafe_allow_html=True)
@@ -382,10 +392,12 @@ def mostrar_login():
 
             if submit:
                 u = usuario_input.lower().strip()
+                st.session_state["ultimo_usuario"] = u  # recordar para verificar al recargar
                 bloq, rest = _bloqueado(u)
                 if bloq:
                     m, s = rest // 60, rest % 60
-                    st.error(f"Cuenta bloqueada. Intenta en {m}m {s}s.")
+                    st.error(f"Cuenta bloqueada. Espera {m}m {s}s antes de intentar de nuevo.")
+                    st.stop()
                     return False
                 if verificar_credenciales(u, password_input):
                     _reset(u)
@@ -396,12 +408,13 @@ def mostrar_login():
                     st.rerun()
                 else:
                     _fallo(u)
-                    usados    = st.session_state.get(f"intentos_{u}", 0)
+                    data     = _leer_bloqueos()
+                    usados   = data.get(u, {}).get("intentos", 0)
                     restantes = MAX_INTENTOS - usados
                     if restantes > 0:
                         st.error(f"Usuario o contraseña incorrectos. Intentos restantes: {restantes}")
                     else:
-                        st.error(f"Cuenta bloqueada por {BLOQUEO_SEGUNDOS // 60} minutos.")
+                        st.error(f"Demasiados intentos fallidos. Cuenta bloqueada por {BLOQUEO_SEGUNDOS // 60} minutos. Recarga la pagina para ver el tiempo restante.")
 
         st.markdown("""
         <div class="features-card">
