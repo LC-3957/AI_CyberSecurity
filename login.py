@@ -116,7 +116,7 @@ def mostrar_login():
 
 /* Quitar borde/fondo del stForm — es la card fantasma */
 [data-testid="stForm"] {{
-    background: linear-gradient(160deg, #0d1f4e 0%, #132060 60%, #1a2d6b 100%) !important;
+    background: #132060 !important;
     border: 1px solid rgba(255,255,255,0.07) !important;
     border-top: none !important;
     border-radius: 0 0 20px 20px !important;
@@ -125,9 +125,9 @@ def mostrar_login():
     margin-top: -4px !important;
 }}
 
-/* ── CARD del formulario ── */
+/* ── CARD del formulario — azul marino como mockup ── */
 .login-card {{
-    background: linear-gradient(160deg, #0d1f4e 0%, #132060 60%, #1a2d6b 100%);
+    background: #132060;
     border-radius: 20px 20px 0 0;
     padding: 2.5rem 2.2rem 1.8rem;
     box-shadow: 0 0 0 1px rgba(255,255,255,0.07);
@@ -193,7 +193,7 @@ def mostrar_login():
     font-weight:800 !important; letter-spacing:0.12em !important;
     border-radius:10px !important; border:none !important;
     padding:0.82rem !important; width:100% !important;
-    margin-top:0.8rem !important; transition:all 0.2s !important;
+    margin-top:0.6rem !important; transition:all 0.2s !important;
 }}
 [data-testid="stFormSubmitButton"] > button:hover {{
     filter:brightness(1.1) !important; transform:translateY(-1px) !important;
@@ -205,9 +205,8 @@ def mostrar_login():
     display:flex; gap:1.2rem; justify-content:center;
     margin-top:1.5rem; padding-top:1.4rem;
     border-top:1px solid rgba(255,255,255,0.12);
-    
 }}
-.feat       {{ text-align:center; flex:1; color: black;  }}
+.feat       {{ text-align:center; flex:1; }}
 .feat-icon  {{ font-size:1.35rem; margin-bottom:0.2rem; }}
 .feat-title {{ font-size:0.7rem; font-weight:700; color:#c9962c; }}
 .feat-desc  {{ font-size:0.62rem; color:#94a3b8; line-height:1.4; }}
@@ -244,13 +243,13 @@ def mostrar_login():
     # Badge + Footer
     st.markdown("""
     <div class="ibero-badge">
-        <div class="ibero-circle"></div>
+        <div class="ibero-circle">🏛️</div>
         <div class="ibero-info">
             <div class="ibero-name">Universidad<br>Iberoamericana<br>León</div>
         </div>
     </div>
     <div class="login-footer">
-        🛡️ &nbsp; WebShield AI &nbsp;·&nbsp; Herramientas de Ciberseguridad &nbsp;·&nbsp; 
+        🛡️ &nbsp; WebShield AI &nbsp;·&nbsp; Herramientas de Ciberseguridad &nbsp;·&nbsp; Prof. Pablo Náchez
     </div>
     """, unsafe_allow_html=True)
 
@@ -270,15 +269,15 @@ def mostrar_login():
                 </div>
             </div>
             <div class="form-labels-inside">
-                <div class="field-label"></div>
+                <div class="field-label">USUARIO</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
         with st.form("login_form", clear_on_submit=False):
-            usuario_input  = st.text_input("USUARIO:", placeholder="tu usuario")
+            usuario_input  = st.text_input("USUARIO", placeholder="tu usuario")
             st.markdown("<div style='margin-top:0.4rem'></div>", unsafe_allow_html=True)
-            password_input = st.text_input("CONTRASEÑA:", type="password", placeholder="tu contraseña")
+            password_input = st.text_input("CONTRASEÑA", type="password", placeholder="tu contraseña")
             st.markdown("<div style='margin-top:0.2rem'></div>", unsafe_allow_html=True)
             submit         = st.form_submit_button("INGRESAR →", use_container_width=True)
 
