@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+/* Fondo general */
+html, body, [data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #eef2f7, #f8fafc);
+    font-family: 'Inter', sans-serif;
+}
+
+/* Ocultar cosas de streamlit */
+#MainMenu, footer, header {
+    visibility: hidden;
+}
+
+/* Contenedor central tipo CARD */
+.login-container {
+    background: linear-gradient(145deg, #0f172a, #1e293b);
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+/* Logo */
+.login-logo {
+    text-align: center;
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Título */
+.login-title {
+    text-align: center;
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: #e2e8f0;
+}
+
+/* Subtítulo */
+.login-sub {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #94a3b8;
+    margin-bottom: 1.5rem;
+}
+
+/* Badge */
+.login-badge {
+    background: linear-gradient(90deg, #1e3a8a, #2563eb);
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Inputs */
+.stTextInput label {
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    color: #cbd5f5 !important;
+}
+
+.stTextInput input {
+    font-size: 0.95rem !important;
+    padding: 12px !important;
+    border-radius: 10px !important;
+    border: 1px solid #334155 !important;
+    background: #020617 !important;
+    color: white !important;
+}
+
+.stTextInput input:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.3) !important;
+}
+
+/* Botón */
+[data-testid="stFormSubmitButton"] button {
+    background: linear-gradient(90deg, #8b5e3c, #c08a5b);
+    color: white;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 12px;
+    border: none;
+}
+
+[data-testid="stFormSubmitButton"] button:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
+}
+
+/* Footer */
+.login-footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 1.2rem;
+}
