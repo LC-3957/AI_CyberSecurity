@@ -355,7 +355,7 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
     background: linear-gradient(135deg, #0f2456, #1e3a8a) !important;
     color: white !important;
     border: none !important;
-    border-radius: 10px !important;
+    border-radius: 25px !important;
     font-weight: 700 !important;
     font-size: 0.82rem !important;
     transition: all 0.2s !important;
