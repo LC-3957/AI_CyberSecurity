@@ -151,15 +151,59 @@ if analizar:
 if "resultado_ia" in st.session_state:
     r = st.session_state["resultado_ia"]
 
-    # Botón Nueva consulta — estilo diferenciado
-    _, bcol = st.columns([5, 1])
-    with bcol:
+    # Botones — Nueva consulta y Descargar reporte
+    _, bcol1, bcol2 = st.columns([4, 1, 1])
+    with bcol1:
         st.markdown('<div class="nueva-consulta-btn">', unsafe_allow_html=True)
         if st.button("↺  Nueva consulta", type="secondary", use_container_width=True):
             for k in ["scan_json", "resultado_ia", "url_analizada", "chat_messages"]:
                 st.session_state.pop(k, None)
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
+    with bcol2:
+        url_analizada = st.session_state.get("url_analizada", "")
+        reporte_txt = f"""WEBSHIELD AI — REPORTE DE SEGURIDAD
+=====================================
+URL analizada: {url_analizada}
+Generado por: WebShield AI | Universidad Iberoamericana León 2026
+
+{'='*60}
+RESUMEN DE HALLAZGOS
+{'='*60}
+{r['resumen']}
+
+{'='*60}
+CLASIFICACIÓN DE RIESGOS
+{'='*60}
+{r['riesgos']}
+
+{'='*60}
+IMPACTO POTENCIAL
+{'='*60}
+{r['impacto']}
+
+{'='*60}
+MITIGACIONES RECOMENDADAS
+{'='*60}
+{r['mitigaciones']}
+
+{'='*60}
+RESUMEN EJECUTIVO
+{'='*60}
+{r['resumen_ejecutivo']}
+
+=====================================
+Herramientas de Ciberseguridad | Prof. Pablo Náchez
+Universidad Iberoamericana León 2026
+"""
+        nombre_archivo = url_analizada.replace("https://", "").replace("http://", "").replace("/", "_")[:40]
+        st.download_button(
+            label="⬇  Descargar reporte",
+            data=reporte_txt.encode("utf-8"),
+            file_name=f"webshield_{nombre_archivo}.txt",
+            mime="text/plain",
+            use_container_width=True
+        )
 
     # Resultados con st.markdown nativo dentro de containers con fondo
     secciones = [
