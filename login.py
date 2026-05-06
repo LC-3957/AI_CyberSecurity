@@ -275,8 +275,10 @@ def mostrar_login():
         """, unsafe_allow_html=True)
 
         with st.form("login_form", clear_on_submit=False):
-            usuario_input  = st.text_input("USUARIO", placeholder="tu usuario", label_visibility="collapsed")
-            password_input = st.text_input("CONTRASEÑA", type="password", placeholder="tu contraseña", label_visibility="collapsed")
+            usuario_input  = st.text_input("USUARIO", placeholder="tu usuario")
+            st.markdown("<div style='margin-top:0.4rem'></div>", unsafe_allow_html=True)
+            password_input = st.text_input("CONTRASEÑA", type="password", placeholder="tu contraseña")
+            st.markdown("<div style='margin-top:0.2rem'></div>", unsafe_allow_html=True)
             submit         = st.form_submit_button("INGRESAR →", use_container_width=True)
 
             if submit:
