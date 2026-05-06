@@ -174,10 +174,12 @@ def mostrar_login() -> bool:
     }
 
     /* Labels del form mas grandes */
+    
     .stTextInput label {
         font-size: 1rem !important;
-        font-weight: 600 !important;
-        color: #1e3a8a !important;
+        font-weight: 700 !important;
+        color: white !important;
+        letter-spacing: 0.08em !important;
     }
 
     /* Input text */
@@ -239,10 +241,12 @@ def mostrar_login() -> bool:
         </div>
         """, unsafe_allow_html=True)
 
+        st.markdown("<br>", unsafe_allow_html=True)
+
         with st.form("login_form", clear_on_submit=False):
-            usuario_input  = st.text_input("Usuario", placeholder="Escribe tu usuario")
-            password_input = st.text_input("Contrasena", type="password", placeholder="Escribe tu contrasena")
-            submit         = st.form_submit_button("Ingresar", use_container_width=True)
+            usuario_input  = st.text_input("USUARIO", placeholder="Escribe tu usuario")
+            password_input = st.text_input("CONTRASEÑA", type="password", placeholder="Escribe tu contraseña")
+            submit         = st.form_submit_button("INGRESAR", use_container_width=True)
 
             if submit:
                 usuario_lower = usuario_input.lower().strip()
