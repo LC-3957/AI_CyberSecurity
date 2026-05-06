@@ -104,6 +104,13 @@ def verificar_credenciales(usuario, password):
 
 
 def mostrar_login():
+    # ── Recuperar token desde query params si no está en session_state ──
+    if "session_token" not in st.session_state:
+        token_url = st.query_params.get("t", "")
+        if token_url:
+            st.session_state["session_token"] = token_url
+
+    # ── Verificar sesión activa ──
     token = st.session_state.get("session_token")
     if token:
         u = _validar_token(token)
@@ -112,6 +119,7 @@ def mostrar_login():
             st.session_state["nombre_actual"]  = USUARIOS[u]["nombre"]
             return True
         del st.session_state["session_token"]
+        st.query_params.clear()
 
     st.markdown(f"""
 <style>
@@ -250,9 +258,9 @@ def mostrar_login():
     transform: translateY(0px) scale(0.99) !important;
 }}
 
-/* ── FEATURES — card, hover, iconos grandes ── */
+/* ── FEATURES — card celeste, hover, iconos grandes ── */
 .features-card {{
-    background: #EDF7FF;
+    background: #425D78;
     border-radius: 16px;
     padding: 1.6rem 1.5rem;
     margin-top: 1.2rem;
@@ -375,6 +383,7 @@ def mostrar_login():
                     st.session_state["session_token"]  = tok
                     st.session_state["usuario_actual"] = u
                     st.session_state["nombre_actual"]  = USUARIOS[u]["nombre"]
+                    st.query_params["t"] = tok
                     st.rerun()
                 else:
                     _fallo(u)
@@ -415,4 +424,5 @@ def cerrar_sesion():
     for k in ["session_token","usuario_actual","nombre_actual",
               "scan_json","resultado_ia","url_analizada","chat_messages"]:
         st.session_state.pop(k, None)
+    st.query_params.clear()
     st.rerun()
