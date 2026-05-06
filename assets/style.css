@@ -4,7 +4,11 @@
 * { font-family: 'Inter', sans-serif !important; box-sizing: border-box; }
 
 .stApp {
-    background: #FFFDF5 !important;
+    /*background: #FFFAED !important;*/
+    background: linear-gradient(
+  rgba(0, 36, 74, 0.4),
+  rgba(0, 123, 255, 0.2)
+);
 }
 
 /* Ocultar barra superior de streamlit */
@@ -110,7 +114,7 @@ footer { visibility: hidden !important; }
 /* Botón salir */
 [data-testid="stButton"] button[kind="secondary"] {
     background: linear-gradient(135deg, #c9962c, #e8b84b) !important;
-    color: #0f172a !important;
+    color: #091020 !important;
     border: none !important;
     border-radius: 10px !important;
     font-weight: 700 !important;
@@ -131,14 +135,14 @@ footer { visibility: hidden !important; }
     text-align: center;
     font-size: 2rem;
     font-weight: 800;
-    color: #0f2456;
+    color: #0a1b45;
     margin-top: 1rem;
     margin-bottom: 0.3rem;
     line-height: 1.2;
 }
 .section-sub-main {
     text-align: center;
-    color: #475569;
+    color: #333f50;
     font-size: 0.92rem;
     margin-bottom: 1.8rem;
     line-height: 1.6;
@@ -175,7 +179,7 @@ footer { visibility: hidden !important; }
 /* Botón ANALIZAR */
 [data-testid="stButton"] button[kind="primary"] {
     background: linear-gradient(90deg, #b8860b, #d4a017, #e8b84b) !important;
-    color: #0f172a !important;
+    color: #0c1323 !important;
     border: none !important;
     border-radius: 12px !important;
     font-weight: 800 !important;
@@ -193,12 +197,12 @@ footer { visibility: hidden !important; }
 
 /* ── RESULT CARDS ── */
 .result-card {
-    background: white;
+    background: whitesmoke;
     border-radius: 16px;
     padding: 1.5rem 1.8rem;
     margin-bottom: 1rem;
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-    border: 1px solid #e2e8f0;
+    border: 1px solid #edf5ff;
     color: #0f172a !important;
     line-height: 1.7;
 }
@@ -212,7 +216,7 @@ footer { visibility: hidden !important; }
 
 /* ── EXPANDER hallazgos ── */
 details {
-    background: white !important;
+    background: whitesmoke !important;
     border-radius: 14px !important;
     border: 1px solid #e2e8f0 !important;
     margin-bottom: 0.8rem !important;
@@ -306,7 +310,7 @@ details[open] summary {
 .result-card code,
 [data-testid="stMarkdownContainer"] pre,
 [data-testid="stMarkdownContainer"] code {
-    background: #1e2d3d !important;
+    background: #111a24 !important;
     color: #e2e8f0 !important;
     border-radius: 10px !important;
     padding: 1rem 1.2rem !important;
@@ -327,3 +331,19 @@ details[open] summary {
 
 /* Ocultar expander viejo del chatbot */
 /* [data-testid="stExpander"] { display:none } */
+
+/* Botón Nueva consulta — estilo diferente al dorado */
+[data-testid="stButton"] button[kind="secondary"] {
+    background: white !important;
+    color: #1e3a8a !important;
+    border: 2px solid #1e3a8a !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    font-size: 0.82rem !important;
+    transition: all 0.2s !important;
+}
+[data-testid="stButton"] button[kind="secondary"]:hover {
+    background: #1e3a8a !important;
+    color: white !important;
+    transform: translateY(-1px) !important;
+}

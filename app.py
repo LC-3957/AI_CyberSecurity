@@ -147,7 +147,12 @@ if analizar:
             st.stop()
 
         barra.empty()
-        st.markdown('<div id="resultados-anchor"></div>', unsafe_allow_html=True)
+        # Scroll de vuelta arriba después del análisis
+        st.markdown("""
+        <script>
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        </script>
+        """, unsafe_allow_html=True)
 
     st.session_state["scan_json"]     = scan_json
     st.session_state["resultado_ia"]  = resultado_ia
@@ -157,13 +162,15 @@ if analizar:
 if "resultado_ia" in st.session_state:
     r = st.session_state["resultado_ia"]
 
-    # Botón limpiar análisis
-    col_res, col_clear = st.columns([6, 1])
-    with col_clear:
-        if st.button("Nueva consulta", type="secondary", use_container_width=True):
+    # Botón limpiar — alineado a la derecha, separado
+    _, bcol = st.columns([5, 1])
+    with bcol:
+        if st.button("↺  Nueva consulta", type="secondary", use_container_width=True):
             for k in ["scan_json", "resultado_ia", "url_analizada", "chat_messages"]:
                 st.session_state.pop(k, None)
             st.rerun()
+
+    st.markdown("<div style='margin-bottom:0.5rem'></div>", unsafe_allow_html=True)
 
     st.markdown(f'<div class="result-card">{r["resumen"]}</div>',           unsafe_allow_html=True)
     st.markdown(f'<div class="result-card">{r["riesgos"]}</div>',           unsafe_allow_html=True)
