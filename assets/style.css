@@ -406,7 +406,7 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
 [data-testid="stProgress"] div,
 [data-testid="stStatusWidget"] p,
 [data-testid="stStatusWidget"] span {
-    color: #1e3a8a !important;
+    color: #ffffff !important;
     font-weight: 600 !important;
     font-size: 0.85rem !important;
 }
