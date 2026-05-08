@@ -224,7 +224,7 @@ button[kind="secondary"]:hover {
 
 /* ── CÓDIGO: bloques pre/code ── */
 [data-testid="stMarkdownContainer"] pre {
-    background: #0f1922 !important;
+    background: #1e2d3d !important;
     border-radius: 10px !important;
     padding: 1rem 1.2rem !important;
     font-size: 0.82rem !important;
@@ -355,7 +355,7 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
     background: linear-gradient(135deg, #0f2456, #1e3a8a) !important;
     color: white !important;
     border: none !important;
-    border-radius: 25px !important;
+    border-radius: 10px !important;
     font-weight: 700 !important;
     font-size: 0.82rem !important;
     transition: all 0.2s !important;
@@ -406,7 +406,7 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
 [data-testid="stProgress"] div,
 [data-testid="stStatusWidget"] p,
 [data-testid="stStatusWidget"] span {
-    color: #ffffff !important;
+    color: #1e3a8a !important;
     font-weight: 600 !important;
     font-size: 0.85rem !important;
 }
@@ -434,4 +434,51 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; }
 [data-testid="stDownloadButton"] {
     margin-top: 0 !important;
     padding-top: 0 !important;
+}
+
+
+
+/* ── Botón descargar — pequeño y ovalado ── */
+.descargar-btn [data-testid="stDownloadButton"] button {
+    background: linear-gradient(135deg, #0f2456, #1e3a8a) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 50px !important;
+    font-weight: 600 !important;
+    font-size: 0.75rem !important;
+    padding: 0.35rem 1.1rem !important;
+    height: auto !important;
+    width: auto !important;
+    box-shadow: 0 3px 10px rgba(15,36,86,0.3) !important;
+    margin-top: 0.5rem !important;
+}
+.descargar-btn [data-testid="stDownloadButton"] button:hover {
+    filter: brightness(1.2) !important;
+    transform: translateY(-1px) !important;
+}
+.descargar-btn [data-testid="stDownloadButton"] button p,
+.descargar-btn [data-testid="stDownloadButton"] button span {
+    color: white !important;
+    font-size: 0.75rem !important;
+}
+.descargar-btn [data-testid="stDownloadButton"] {
+    width: auto !important;
+}
+
+/* ── Forzar texto blanco en TODOS los bloques de código ── */
+pre, pre *, pre span, pre code,
+code[class*="language-"],
+.stMarkdown pre,
+.stMarkdown pre *,
+[data-testid="stMarkdownContainer"] pre,
+[data-testid="stMarkdownContainer"] pre *,
+[data-testid="stMarkdownContainer"] pre span,
+[data-testid="stMarkdownContainer"] pre code {
+    color: #e2e8f0 !important;
+    background: transparent !important;
+    -webkit-text-fill-color: #e2e8f0 !important;
+}
+
+[data-testid="stMarkdownContainer"] pre {
+    background: #1e2d3d !important;
 }
