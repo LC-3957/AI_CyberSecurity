@@ -260,7 +260,7 @@ def mostrar_login():
 
 /* ── FEATURES — card celeste, hover, iconos grandes ── */
 .features-card {{
-    background: #425D78;
+    background: #EDFBFF;
     border-radius: 16px;
     padding: 1.6rem 1.5rem;
     margin-top: 1.2rem;
