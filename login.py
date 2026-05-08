@@ -260,7 +260,7 @@ def mostrar_login():
 
 /* ── FEATURES — card celeste, hover, iconos grandes ── */
 .features-card {{
-    background: #F5FAFF;
+    background: #425D78;
     border-radius: 16px;
     padding: 1.6rem 1.5rem;
     margin-top: 1.2rem;
@@ -351,15 +351,17 @@ def mostrar_login():
         </div>
         """, unsafe_allow_html=True)
 
-        # ── Verificar bloqueo activo AL CARGAR la pagina ──
-        usuario_guardado = st.session_state.get("ultimo_usuario", "")
-        if usuario_guardado:
-            bloq, rest = _bloqueado(usuario_guardado)
+        # ── Verificar bloqueo activo AL CARGAR — sobrevive recargas ──
+        usuario_bloqueado = st.query_params.get("blocked", "")
+        if usuario_bloqueado:
+            bloq, rest = _bloqueado(usuario_bloqueado)
             if bloq:
                 m, s = rest // 60, rest % 60
                 st.error(f"Cuenta bloqueada. Espera {m}m {s}s antes de intentar de nuevo.")
-                st.info("Recarga la pagina para actualizar el tiempo restante.")
                 st.stop()
+            else:
+                # Expiró — limpiar
+                st.query_params.pop("blocked", None)
 
         with st.form("login_form", clear_on_submit=False):
             usuario_input  = st.text_input("USUARIO:", placeholder="👤  tu usuario")
@@ -370,10 +372,10 @@ def mostrar_login():
 
             if submit:
                 u = usuario_input.lower().strip()
-                st.session_state["ultimo_usuario"] = u  # recordar para verificar al recargar
                 bloq, rest = _bloqueado(u)
                 if bloq:
                     m, s = rest // 60, rest % 60
+                    st.query_params["blocked"] = u
                     st.error(f"Cuenta bloqueada. Espera {m}m {s}s antes de intentar de nuevo.")
                     st.stop()
                     return False
@@ -384,15 +386,17 @@ def mostrar_login():
                     st.session_state["usuario_actual"] = u
                     st.session_state["nombre_actual"]  = USUARIOS[u]["nombre"]
                     st.query_params["t"] = tok
+                    st.query_params.pop("blocked", None)
                     st.rerun()
                 else:
                     _fallo(u)
-                    data     = _leer_bloqueos()
-                    usados   = data.get(u, {}).get("intentos", 0)
+                    data      = _leer_bloqueos()
+                    usados    = data.get(u, {}).get("intentos", 0)
                     restantes = MAX_INTENTOS - usados
                     if restantes > 0:
                         st.error(f"Usuario o contraseña incorrectos. Intentos restantes: {restantes}")
                     else:
+                        st.query_params["blocked"] = u
                         st.error(f"Demasiados intentos fallidos. Cuenta bloqueada por {BLOQUEO_SEGUNDOS // 60} minutos. Recarga la pagina para ver el tiempo restante.")
 
         st.markdown("""
